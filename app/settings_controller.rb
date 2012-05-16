@@ -90,7 +90,7 @@ class SettingsController < UIViewController
   
   def textFieldDidEndEditing(textField)
     #TODO refactor this terrible code
-    textField.email.email = textField.text
+    textField.update_model
     EmailsStore.shared.save_email(textField.email)
     
     @emailsTable.reloadData

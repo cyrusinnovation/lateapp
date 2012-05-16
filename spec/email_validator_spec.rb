@@ -8,10 +8,13 @@ describe "Email Validator" do
     @validator.validate('bbrown@cyrusinnovation.com').should == true
   end
   
-  it "doesn't validate empty email addresses" do
-    @validator.validate('').should == false
+  it "works with empty email addresses" do
+    @validator.validate('').should == true
   end
   
+  it "doesn't validate nil email addresses" do
+    @validator.validate(nil).should == false
+  end
   it "doesn't validate bad email addresses" do
     @validator.validate('abcdafsafsd').should == false
     @validator.validate('@').should == false
