@@ -1,7 +1,6 @@
 class SettingsController < UIViewController
   def loadView
     super
-    @emails = [MemoryEmail.new("abc@cyrus.com", 0), MemoryEmail.new("def@cyrus.com", 1)]
   end
   
   def viewDidLoad
@@ -19,7 +18,7 @@ class SettingsController < UIViewController
     label.backgroundColor = UIColor.clearColor
     @ui_view.addSubview(label)
     
-    @emailsTable = UITableView.alloc.initWithFrame([[20, 70], [view.frame.size.width - 20 * 2, (@emails.length + 1) * standardCellHeight]], 
+    @emailsTable = UITableView.alloc.initWithFrame([[20, 70], [view.frame.size.width - 20 * 2, (EmailsStore.shared.emails.length + 1) * standardCellHeight]], 
       style:UITableViewStylePlain)
     @emailsTable.layer.cornerRadius = 10
     @emailsTable.delegate = @emailsTable.dataSource = self
@@ -30,7 +29,7 @@ class SettingsController < UIViewController
   end
   
   def tableView(tv, numberOfRowsInSection:section)
-    @emails.length + 1
+    EmailsStore.shared.emails.length + 1
   end
 
   def tableView(tv, cellForRowAtIndexPath:indexPath)
@@ -41,10 +40,10 @@ class SettingsController < UIViewController
     
     textField = UIEmailTextField.alloc.initWithFrame([[0,0],[200,44]])
     textField.delegate = self
-    if indexPath.row < @emails.length
-      textField.email = @emails[indexPath.row]
+    if indexPath.row < EmailsStore.shared.emails.length
+      textField.email = EmailsStore.shared.emails[indexPath.row]
     else
-      textField.email = MemoryEmail.new('', @emails.length)
+      textField.email = EmailsStore.shared.create_email()
     end
     cell.addSubview(textField) 
     cell
@@ -60,36 +59,33 @@ class SettingsController < UIViewController
   end
   
   def tableView(tv, editingStyleForRowAtIndexPath:indexPath)
-    #puts("editingStyle")
-    UITableViewCellEditingStyleDelete
+    if indexPath.row < EmailsStore.shared.emails.length and !@editing
+      UITableViewCellEditingStyleDelete
+    else
+      UITableViewCellEditingStyleNone
+    end
   end
   
   def tableView(tv, commitEditingStyle:editingStyle, forRowAtIndexPath:indexPath )
     if (editingStyle == UITableViewCellEditingStyleDelete)
-      @emails.delete_at(indexPath.row)
+      EmailsStore.shared.remove_email(EmailsStore.shared.emails[indexPath.row])
       tv.deleteRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimationFade)
       recalculate_table_height
     end
   end
   
   def textFieldDidBeginEditing(textField)
-    if textField.email.index == @emails.length
-      @addingNew = true
-    else
-      @addingNew = false
-    end
+    @editing = true
   end
   
   def textFieldDidEndEditing(textField)
     #TODO refactor this terrible code
     textField.email.email = textField.text
-
-    if @addingNew and textField.text != ""
-      @emails << textField.email
-    end
+    EmailsStore.shared.save_email(textField.email)
     
     @emailsTable.reloadData
     recalculate_table_height
+    @editing = false
   end
   
   def textFieldShouldReturn(textField)
@@ -97,18 +93,16 @@ class SettingsController < UIViewController
   end
   
   def recalculate_table_height
-    fr = @emailsTable.frame
-    new_height = (@emails.length + 1) * standardCellHeight
-    @emailsTable.frame = [fr[0], [fr.size.width, new_height]]
+    old_frame = @emailsTable.frame
+    new_height = (EmailsStore.shared.emails.length + 1) * standardCellHeight
+    @emailsTable.frame = [old_frame.origin, [old_frame.size.width, new_height]]
     bottom = @emailsTable.frame.origin.y + @emailsTable.frame.size.height
     
-    @ui_view.frame = [@ui_view.frame[0], 
+    @ui_view.frame = [@ui_view.frame.origin, 
                       [@ui_view.frame.size.width, 
                        [view.frame.size.height, bottom + 20].max]]
     
     @scroll_view.contentSize = @ui_view.frame.size
-    puts @scroll_view.contentSize.height
-    puts @scroll_view.frame.size.height
   end
   
 end

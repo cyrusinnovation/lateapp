@@ -9,7 +9,7 @@ class EmailsStore
       # Fetch all emails from the model, sorting by the creation date.
       request = NSFetchRequest.alloc.init
       request.entity = NSEntityDescription.entityForName('Email', inManagedObjectContext:@context)
-      request.sortDescriptors = [NSSortDescriptor.alloc.initWithKey('index', ascending:false)] 
+      #request.sortDescriptors = [NSSortDescriptor.alloc.initWithKey('index', ascending:false)] 
 
       error_ptr = Pointer.new(:object)
       data = @context.executeFetchRequest(request, error:error_ptr)
@@ -19,19 +19,27 @@ class EmailsStore
       data
     end
   end
-
-  def add_email
-    # Yield a blank, newly created Email entity, then save the model.
-    yield NSEntityDescription.insertNewObjectForEntityForName('Email', inManagedObjectContext:@context)
-    save
-  end
+  
+  def create_email
+    model = @context.persistentStoreCoordinator.managedObjectModel
+    edesc = model.entitiesByName.objectForKey('Email')
+    NSManagedObject.alloc.initWithEntity(edesc, insertIntoManagedObjectContext:nil)
+    #NSEntityDescription.insertNewObjectForEntityForName('Email', inManagedObjectContext:@context)
+  end  
 
   def remove_email(email)
     # Delete the given entity, then save the model.
     @context.deleteObject(email)
     save
   end
-
+  
+  def save_email(email)
+    if email.new? and email.email != ""
+      @context.insertObject(email)
+    end
+    save
+  end
+  
   private
 
   def initialize
