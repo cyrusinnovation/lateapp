@@ -10,7 +10,7 @@ class RunningLateController < UIViewController
     label.backgroundColor = UIColor.clearColor
     view.addSubview(label)
     
-    @arrayMinutes = ["5 mins","10 mins","15 mins","20 mins","30 mins","1 hour","> an hour? Really?"]
+    @arrayMinutes = ["5 mins","10 mins","15 mins","20 mins","30 mins","1 hour"]
     @selectedMinutes = @arrayMinutes[0]
     
     picker = UIPickerView.alloc.initWithFrame([[40,80],[view.frame.size.width - 40 * 2, 100]])
@@ -21,9 +21,10 @@ class RunningLateController < UIViewController
     @okButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
     @okButton.setTitle('Okay', forState:UIControlStateNormal)
     @okButton.frame = [[40,260],[view.frame.size.width - 40 * 2, 40]]
-    @okButton.addTarget(self, action:'actionTapped:forEvent:', forControlEvents:UIControlEventTouchUpInside)
+    @okButton.addTarget(self, action:'actionTapped:', forControlEvents:UIControlEventTouchUpInside)
     view.addSubview(@okButton)
     
+    @emailSender = EmailSender.new
   end
   
   #-------------------Picker Methods-------------------#
@@ -45,9 +46,11 @@ class RunningLateController < UIViewController
   end
   
   #-------------------okButton Methods-------------------#
-  def actionTapped(sender, forEvent:event)
-    puts(sender)
-    puts(event)
+  def actionTapped(sender)
+    @emailSender.showEmail(self,"#{@selectedMinutes} Late Today",createEmailMessage(@selectedMinutes))
   end
   
+  def createEmailMessage(time)
+    "I am running about #{time} late today. Sorry!"
+  end  
 end

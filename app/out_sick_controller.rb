@@ -27,53 +27,22 @@ class OutSickController < UIViewController
     @noButton.frame = [[40,180],[view.frame.size.width - 40 * 2, 40]]
     @noButton.addTarget(self, action:'buttonPressed:', forControlEvents:UIControlEventTouchUpInside)
     view.addSubview(@noButton)
+    
+    @emailSender = EmailSender.new
   end
   
   def buttonPressed(sender)
-    self.showEmailModalView
+    @emailSender.showEmail(self,"Out Sick Today",createEmailMessage(sender.titleLabel.text))
   end
   
-  def showEmailModalView
-     # Set up email controller
-     picker = MFMailComposeViewController.alloc.init
-     picker.mailComposeDelegate = self
-     
-     # Set Email properties
-     recipients = []
-     EmailsStore.shared.emails.each do |email|
-      recipients << email.email
-     end
-     picker.setToRecipients(recipients)
-     picker.setSubject("Out Sick")
-     emailBody = "Hey, I am out sick today."
-     picker.setMessageBody(emailBody,isHTML:true)
-     
-     # display
-     picker.navigationBar.barStyle = UIBarStyleBlack
-     self.presentModalViewController(picker, animated:true)
-  end
-  
-  # Dismisses the email composition interface when users tap Cancel or Send. 
-  # Proceeds to update the message field with the result of the operation.
-  def mailComposeController(controller, didFinishWithResult:result, error:error)
-
-    # # Notifies users about errors associated with the interface
-    # case result
-    #   when MFMailComposeResultCancelled
-    #     break
-    #   when MFMailComposeResultSaved
-    #     break
-    #   when MFMailComposeResultSent
-    #     break
-    #   when MFMailComposeResultFailed
-    #     break
-    #   else
-    #     alert = UIAlertView.alloc.initWithTitle("Email", message:"Sending Failed - Unknown Error :-(",
-    #                 delegate:self, cancelButtonTitle:"OK", otherButtonTitles: nil)
-    #     alert.show
-    #   break
-    # end
-    self.dismissModalViewControllerAnimated(true)
+  def createEmailMessage(emailCheckingStatus)
+    if emailCheckingStatus == "Will Do"
+      "I am out sick. I will check my email periodically."
+    elsif emailCheckingStatus == "Maybe Later"
+      "I am out sick. I might check my email later depending on how I feel."
+    else
+      "I am out sick. I will probably not be able to check my email anytime soon, but I'll update you when I get a chance."
+    end
   end
   
 end
