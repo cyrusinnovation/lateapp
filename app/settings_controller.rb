@@ -1,15 +1,12 @@
 class SettingsController < UIViewController
   def loadView
     super
-    
-    @emails = ["abc@cyrus.com", "def@cyrus.com", "efg@cyrus.com", "asdfasf@abc.com", "def@cyrus.com", "efg@cyrus.com", "asdfasf@abc.com"]
+    @emails = [MemoryEmail.new("abc@cyrus.com", 0), MemoryEmail.new("def@cyrus.com", 1)]
   end
   
   def viewDidLoad
     @scroll_view = UIScrollView.alloc.initWithFrame([[0, 0],[view.frame.size.width, view.frame.size.height - 44]])
     @ui_view = UIView.alloc.initWithFrame([[0, 0],[view.frame.size.width, view.frame.size.height - 44]])
-    puts "onload"
-    puts @ui_view.frame.size.height
     @scroll_view.addSubview(@ui_view)
     
     self.title = "Settings"
@@ -42,13 +39,13 @@ class SettingsController < UIViewController
                   UITableViewCellStyleSubtitle,
                   reuseIdentifier:nil)
     
-    textField = UITextFieldWithRow.alloc.initWithFrame([[0,0],[200,44]])
+    textField = UIEmailTextField.alloc.initWithFrame([[0,0],[200,44]])
     textField.delegate = self
-    textField.text = @emails[indexPath.row] if indexPath.row < @emails.length
-    textField.placeholder = "Add email..."
-    textField.keyboardType = UIKeyboardTypeEmailAddress
-    textField.returnKeyType = UIReturnKeyDone
-    textField.row = indexPath.row
+    if indexPath.row < @emails.length
+      textField.email = @emails[indexPath.row]
+    else
+      textField.email = MemoryEmail.new('', @emails.length)
+    end
     cell.addSubview(textField) 
     cell
   end
@@ -76,7 +73,7 @@ class SettingsController < UIViewController
   end
   
   def textFieldDidBeginEditing(textField)
-    if textField.row == @emails.length
+    if textField.email.index == @emails.length
       @addingNew = true
     else
       @addingNew = false
@@ -84,11 +81,13 @@ class SettingsController < UIViewController
   end
   
   def textFieldDidEndEditing(textField)
+    #TODO refactor this terrible code
+    textField.email.email = textField.text
+
     if @addingNew and textField.text != ""
-      @emails << textField.text
-    else
-      @emails[textField.row] = textField.text
+      @emails << textField.email
     end
+    
     @emailsTable.reloadData
     recalculate_table_height
   end
