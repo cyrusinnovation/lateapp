@@ -26,7 +26,27 @@ class SettingsController < UIViewController
     
     view.addSubview(@scroll_view)
     recalculate_table_height
+
+    NSNotificationCenter.defaultCenter.addObserver(self, selector:'keyboardWillShow:', name:UIKeyboardWillShowNotification, object:self.view.window)
   end
+
+  def viewDidUnload 
+    NSNotificationCenter.defaultCenter.removeObserver(self, name:UIKeyboardWillShowNotification, object:nil)
+  end
+
+
+  def keyboardWillShow(n)
+    userInfo = n.userInfo
+    keyboardSize = userInfo.objectForKey(UIKeyboardFrameBeginUserInfoKey).CGRectValue.size
+
+    newHeight = @scroll_view.frame.size.height - keyboardSize.height
+    UIView.beginAnimations(nil, context:nil)
+    UIView.setAnimationBeginsFromCurrentState(true)
+    UIView.setAnimationDuration(0.3)
+    @scroll_view.contentOffset = [0, @activeOffset - (newHeight / 2)]
+    UIView.commitAnimations
+  end
+
   
   def item_height
     44
@@ -86,6 +106,8 @@ class SettingsController < UIViewController
   
   def textFieldDidBeginEditing(textField)
     @editing = true
+    #textField + cell + table
+    @activeOffset = textField.frame.origin.y + textField.superview.frame.origin.y + textField.superview.superview.frame.origin.y
   end
   
   def textFieldDidEndEditing(textField)
@@ -96,6 +118,7 @@ class SettingsController < UIViewController
     @emailsTable.reloadData
     recalculate_table_height
     @editing = false
+    @activeOffset = 0
   end
   
   def textFieldShouldReturn(textField)
