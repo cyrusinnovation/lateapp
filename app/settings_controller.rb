@@ -4,21 +4,21 @@ class SettingsController < UIViewController
   end
   
   def viewDidLoad
-    @scroll_view = UIScrollView.alloc.initWithFrame([[0, 0],[view.frame.size.width, view.frame.size.height - 44]])
-    @ui_view = UIView.alloc.initWithFrame([[0, 0],[view.frame.size.width, view.frame.size.height - 44]])
+    @scroll_view = UIScrollView.alloc.initWithFrame([[0, 0],[view.frame.size.width, view.frame.size.height - item_height]])
+    @ui_view = UIView.alloc.initWithFrame([[0, 0],[view.frame.size.width, view.frame.size.height - item_height]])
     @scroll_view.addSubview(@ui_view)
     
     self.title = "Settings"
     
     label = UILabel.new
-    label.frame = [[20,20],[view.frame.size.width - 20 * 2, 40]]
+    label.frame = [[margin, margin],[content_width, item_height]]
     label.text = "Team Emails"
     label.textAlignment = UITextAlignmentCenter
     label.textColor = UIColor.whiteColor
     label.backgroundColor = UIColor.clearColor
     @ui_view.addSubview(label)
     
-    @emailsTable = UITableView.alloc.initWithFrame([[20, 70], [view.frame.size.width - 20 * 2, (EmailsStore.shared.emails.length + 1) * standardCellHeight]], 
+    @emailsTable = UITableView.alloc.initWithFrame([[20, 70], [content_width, (EmailsStore.shared.emails.length + 1) * standardCellHeight]], 
       style:UITableViewStylePlain)
     @emailsTable.layer.cornerRadius = 10
     @emailsTable.delegate = @emailsTable.dataSource = self
@@ -26,6 +26,16 @@ class SettingsController < UIViewController
     
     view.addSubview(@scroll_view)
     recalculate_table_height
+  end
+  
+  def item_height
+    44
+  end
+  def margin
+    20
+  end
+  def content_width
+    view.frame.size.width - (margin * 2)
   end
   
   def tableView(tv, numberOfRowsInSection:section)
@@ -38,7 +48,7 @@ class SettingsController < UIViewController
                   UITableViewCellStyleSubtitle,
                   reuseIdentifier:nil)
     
-    textField = UIEmailTextField.alloc.initWithFrame([[0,0],[200,44]])
+    textField = UIEmailTextField.alloc.initWithFrame([[10,15],[content_width - 10,item_height - 15]])
     textField.delegate = self
     if indexPath.row < EmailsStore.shared.emails.length
       textField.email = EmailsStore.shared.emails[indexPath.row]
