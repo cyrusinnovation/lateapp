@@ -23,4 +23,5 @@ class AppDelegate
   def settings_controller
     @settings_controller ||= SettingsController.alloc.init
   end
+ 
 end

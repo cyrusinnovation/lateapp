@@ -30,7 +30,50 @@ class OutSickController < UIViewController
   end
   
   def buttonPressed(sender)
-    
+    self.showEmailModalView
+  end
+  
+  def showEmailModalView
+     # Set up email controller
+     picker = MFMailComposeViewController.alloc.init
+     picker.mailComposeDelegate = self
+     
+     # Set Email properties
+     recipients = []
+     EmailsStore.shared.emails.each do |email|
+      recipients << email.email
+     end
+     picker.setToRecipients(recipients)
+     picker.setSubject("Out Sick")
+     emailBody = "Hey, I am out sick today."
+     picker.setMessageBody(emailBody,isHTML:true)
+     
+     # display
+     picker.navigationBar.barStyle = UIBarStyleBlack
+     self.presentModalViewController(picker, animated:true)
+  end
+  
+  # Dismisses the email composition interface when users tap Cancel or Send. 
+  # Proceeds to update the message field with the result of the operation.
+  def mailComposeController(controller, didFinishWithResult:result, error:error)
+
+    # # Notifies users about errors associated with the interface
+    # case result
+    #   when MFMailComposeResultCancelled
+    #     break
+    #   when MFMailComposeResultSaved
+    #     break
+    #   when MFMailComposeResultSent
+    #     break
+    #   when MFMailComposeResultFailed
+    #     break
+    #   else
+    #     alert = UIAlertView.alloc.initWithTitle("Email", message:"Sending Failed - Unknown Error :-(",
+    #                 delegate:self, cancelButtonTitle:"OK", otherButtonTitles: nil)
+    #     alert.show
+    #   break
+    # end
+    self.dismissModalViewControllerAnimated(true)
   end
   
 end
