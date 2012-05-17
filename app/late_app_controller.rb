@@ -2,7 +2,7 @@ class LateAppController < UITableViewController
   
   def viewDidLoad
     @actions = ["Running Late", "Out Sick", "Settings"]
-    self.title = "JobSnooze"
+    self.title = "I'm Late!"
   end
   
   def tableView(tv, numberOfRowsInSection:section)
