@@ -20,6 +20,7 @@ class SettingsController < UIViewController
     
     @emailsTable = UITableView.alloc.initWithFrame([[20, 70], [content_width, (EmailsStore.shared.emails.length + 1) * standardCellHeight]], 
       style:UITableViewStylePlain)
+    @emailsTable.allowsSelection = false
     @emailsTable.layer.cornerRadius = 10
     @emailsTable.delegate = @emailsTable.dataSource = self
     @ui_view.addSubview(@emailsTable)
@@ -28,23 +29,44 @@ class SettingsController < UIViewController
     recalculate_table_height
 
     NSNotificationCenter.defaultCenter.addObserver(self, selector:'keyboardWillShow:', name:UIKeyboardWillShowNotification, object:self.view.window)
+    NSNotificationCenter.defaultCenter.addObserver(self, selector:'keyboardWillHide:', name:UIKeyboardWillHideNotification, object:self.view.window)
+    
+    @keyboardIsShown = false
   end
 
   def viewDidUnload 
     NSNotificationCenter.defaultCenter.removeObserver(self, name:UIKeyboardWillShowNotification, object:nil)
+    NSNotificationCenter.defaultCenter.removeObserver(self, name:UIKeyboardWillHideNotification, object:nil)
   end
 
-
-  def keyboardWillShow(n)
+  def keyboardWillHide(n)
     userInfo = n.userInfo
     keyboardSize = userInfo.objectForKey(UIKeyboardFrameBeginUserInfoKey).CGRectValue.size
 
-    newHeight = @scroll_view.frame.size.height - keyboardSize.height
+    view_frame = @scroll_view.frame
     UIView.beginAnimations(nil, context:nil)
     UIView.setAnimationBeginsFromCurrentState(true)
     UIView.setAnimationDuration(0.3)
+    view_frame.size.height += keyboardSize.height
+    @scroll_view.setFrame([@scroll_view.frame.origin,[@scroll_view.frame.size.width,view_frame.size.height]])
+    UIView.commitAnimations
+    @keyboardIsShown = false
+  end
+  
+  def keyboardWillShow(n)
+    userInfo = n.userInfo
+    keyboardSize = userInfo.objectForKey(UIKeyboardFrameBeginUserInfoKey).CGRectValue.size
+    
+    view_frame = @scroll_view.frame
+    newHeight = view_frame.size.height - keyboardSize.height
+    UIView.beginAnimations(nil, context:nil)
+    UIView.setAnimationBeginsFromCurrentState(true)
+    UIView.setAnimationDuration(0.3)
+    view_frame.size.height -= keyboardSize.height unless @keyboardIsShown
+    @scroll_view.setFrame([@scroll_view.frame.origin,[@scroll_view.frame.size.width,view_frame.size.height]])
     @scroll_view.contentOffset = [0, @activeOffset - (newHeight / 2)]
     UIView.commitAnimations
+    @keyboardIsShown = true
   end
 
   

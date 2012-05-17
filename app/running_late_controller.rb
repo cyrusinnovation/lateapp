@@ -16,6 +16,7 @@ class RunningLateController < UIViewController
     picker = UIPickerView.alloc.initWithFrame([[40,80],[view.frame.size.width - 40 * 2, 100]])
     picker.delegate = self
     picker.dataSource = self
+    picker.showsSelectionIndicator = true
     view.addSubview(picker)
     
     @okButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
