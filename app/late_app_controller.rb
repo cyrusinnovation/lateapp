@@ -6,10 +6,9 @@ class LateAppController < UITableViewController
   
   def viewDidLoad
     @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => "Running Late",
-            NSIndexPath.indexPathForRow(1, inSection:0) => "Out Sick",
-            NSIndexPath.indexPathForRow(0, inSection:1) => "Settings"
-      }
-    view.backgroundColor = UIColor.brownColor
+                NSIndexPath.indexPathForRow(1, inSection:0) => "Out Sick",
+                NSIndexPath.indexPathForRow(0, inSection:1) => "Settings"}
+    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f')
     navigationController.navigationBar.setBackgroundImage(UIImage.imageNamed("banner.png"), forBarMetrics:UIBarMetricsDefault)
   end
   
@@ -34,6 +33,11 @@ class LateAppController < UITableViewController
     cell
   end
   
+  def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
+    cell.setBackgroundColor(UIColor.fromHexCode('a6','2e','15'))
+    cell.textLabel.textColor = UIColor.whiteColor
+  end
+  
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
     
     if @actions[indexPath] == "Running Late"
@@ -47,8 +51,17 @@ class LateAppController < UITableViewController
     elsif @actions[indexPath] == "Settings" 
       settings_controller = UIApplication.sharedApplication.delegate.settings_controller
       navigationController.pushViewController(settings_controller, animated:true)
-      
     end
+
+    tv.deselectRowAtIndexPath(indexPath, animated:true)
+  end
+  
+  def willPresentActionSheet(as)
+    mySize = as.bounds.size
+    myRect = [[0, 0], [mySize.width, mySize.height]]
+    redView = UIImageView.alloc.initWithFrame(myRect)
+    redView.setBackgroundColor(UIColor.fromHexCode('a6','2e','15'))
+    as.insertSubview(redView, atIndex:0)
   end
   
   def actionSheet(as, clickedButtonAtIndex:buttonIndex)
