@@ -1,4 +1,4 @@
-class UIEmailTextField < UITextField
+class EmailTextField < UITextField
   def initWithFrame(frame)
     super(frame)
     self.placeholder = "Add email..."
