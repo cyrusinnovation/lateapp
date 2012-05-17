@@ -4,7 +4,6 @@ class SettingsController < UITableViewController
   end
   
   def viewDidLoad
-    self.title = "Settings"
     tableView.allowsSelection = false
     @keyboardIsShown = false
   end
