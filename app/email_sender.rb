@@ -48,9 +48,9 @@ class EmailSender
   end
   
   def createSickEmailMessage(emailCheckingStatus)
-    if emailCheckingStatus == "Will Do"
+    if emailCheckingStatus == "Will do"
       "I am out sick. I will check my email periodically."
-    elsif emailCheckingStatus == "Maybe Later"
+    elsif emailCheckingStatus == "Maybe later"
       "I am out sick. I might check my email later depending on how I feel."
     else
       "I am out sick. I will probably not be able to check my email anytime soon, but I'll update you when I get a chance."
