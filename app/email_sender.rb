@@ -11,11 +11,10 @@ class EmailSender
        recipients << email.email
      end
      picker.setToRecipients(recipients)
-     puts "set to recips done"
      picker.setSubject(subject)
      picker.setMessageBody(message,isHTML:true)
    
-     # display
+     # Display
      picker.navigationBar.barStyle = UIBarStyleBlack
      controller.presentModalViewController(picker, animated:true)
   end
@@ -42,4 +41,25 @@ class EmailSender
     # end
     controller.dismissModalViewControllerAnimated(true)
   end
+  
+  
+  def createLateEmailMessage(time)
+    "I am running about #{time} late today. Sorry!"
+  end
+  
+  def createSickEmailMessage(emailCheckingStatus)
+    if emailCheckingStatus == "Will Do"
+      "I am out sick. I will check my email periodically."
+    elsif emailCheckingStatus == "Maybe Later"
+      "I am out sick. I might check my email later depending on how I feel."
+    else
+      "I am out sick. I will probably not be able to check my email anytime soon, but I'll update you when I get a chance."
+    end
+  end
+  
+  def titlecase(str)
+     non_capitalized = %w{of etc and by the for on is at to but nor or a via}
+     str.gsub(/\b[a-z]+/){ |w| non_capitalized.include?(w) ? w : w.capitalize  }.sub(/^[a-z]/){|l| l.upcase }.sub(/\b[a-z][^\s]*?$/){|l| l.capitalize }
+  end
+
 end

@@ -1,8 +1,13 @@
 class LateAppController < UITableViewController
   
+  def loadView
+    self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,440]], style: UITableViewStyleGrouped)
+  end  
+  
   def viewDidLoad
     @actions = ["Running Late", "Out Sick", "Settings"]
-    self.title = "I'm Late!"
+    # view.backgroundColor = UIColor.redColor
+    navigationController.navigationBar.setBackgroundImage(UIImage.imageNamed("banner.png"), forBarMetrics:UIBarMetricsDefault)
   end
   
   def tableView(tv, numberOfRowsInSection:section)
@@ -19,7 +24,6 @@ class LateAppController < UITableViewController
   end
   
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
-    #puts @actions[indexPath.row]
     if @actions[indexPath.row] == "Running Late"
       late_action_sheet = UIActionSheet.alloc.initWithTitle("How late?", delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"5 minutes","15 minutes","30 minutes","1 hour",nil)
       late_action_sheet.showInView(self.view)
@@ -39,30 +43,11 @@ class LateAppController < UITableViewController
     unless buttonIndex == as.cancelButtonIndex
       @emailSender ||= EmailSender.new
       if as.title == "How late?"
-        @emailSender.showEmail(self,"#{titlecase(as.buttonTitleAtIndex(buttonIndex))} Late Today", createLateEmailMessage(as.buttonTitleAtIndex(buttonIndex)))
+        @emailSender.showEmail(self,"#{@emailSender.titlecase(as.buttonTitleAtIndex(buttonIndex))} Late Today", @emailSender.createLateEmailMessage(as.buttonTitleAtIndex(buttonIndex)))
       else
-        @emailSender.showEmail(self,"Out Sick Today", createSickEmailMessage(as.buttonTitleAtIndex(buttonIndex)))
+        @emailSender.showEmail(self,"Out Sick Today", @emailSender.createSickEmailMessage(as.buttonTitleAtIndex(buttonIndex)))
       end  
     end
   end
 
-  def createLateEmailMessage(time)
-    "I am running about #{time} late today. Sorry!"
-  end
-  
-  def createSickEmailMessage(emailCheckingStatus)
-    if emailCheckingStatus == "Will Do"
-      "I am out sick. I will check my email periodically."
-    elsif emailCheckingStatus == "Maybe Later"
-      "I am out sick. I might check my email later depending on how I feel."
-    else
-      "I am out sick. I will probably not be able to check my email anytime soon, but I'll update you when I get a chance."
-    end
-  end
-  
-  def titlecase(str)
-     non_capitalized = %w{of etc and by the for on is at to but nor or a via}
-     str.gsub(/\b[a-z]+/){ |w| non_capitalized.include?(w) ? w : w.capitalize  }.sub(/^[a-z]/){|l| l.upcase }.sub(/\b[a-z][^\s]*?$/){|l| l.capitalize }
-  end
-  
 end
