@@ -11,6 +11,7 @@ class EmailSender
        recipients << email.email
      end
      picker.setToRecipients(recipients)
+     puts "set to recips done"
      picker.setSubject(subject)
      picker.setMessageBody(message,isHTML:true)
    
