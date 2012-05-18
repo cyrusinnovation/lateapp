@@ -44,7 +44,6 @@ class LateAppController < UITableViewController
   end
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-    #cell.setBackgroundColor(UIColor.whiteColor)
     cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
   end
   

@@ -1,7 +1,8 @@
 class Email < NSManagedObject
   def self.entity
     @entity ||= begin
-      # Create the entity for our EMail class. The entity has 3 properties. CoreData will appropriately define accessor methods for the properties.
+      # Create the entity for our Email class. The entity has 3 properties. 
+      # CoreData will appropriately define accessor methods for the properties.
       entity = NSEntityDescription.alloc.init
       entity.name = 'Email'
       entity.managedObjectClassName = 'Email'

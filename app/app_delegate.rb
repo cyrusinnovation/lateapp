@@ -3,7 +3,6 @@ class AppDelegate
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     @window.rootViewController = nav_controller
     @window.rootViewController.wantsFullScreenLayout = true
-    #@window.backgroundColor = UIColor.alloc.initWithRed(0.4, green: 0.99, blue: 0.5, alpha: 0.7)
     @window.makeKeyAndVisible
     true
   end

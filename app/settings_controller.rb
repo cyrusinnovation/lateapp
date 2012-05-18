@@ -23,7 +23,6 @@ class SettingsController < UITableViewController
   end
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-    puts cell.subviews
     cell.subviews[2].textColor = UIColor.fromHexCode('44','44','44') # gray
   end
 
