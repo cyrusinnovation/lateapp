@@ -6,8 +6,6 @@ class SettingsController < UITableViewController
   def viewDidLoad
     tableView.allowsSelection = false
     tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
-    
-    @keyboardIsShown = false
   end
 
   def numberOfSectionsInTableView(tv)
@@ -31,7 +29,7 @@ class SettingsController < UITableViewController
                   UITableViewCellStyleSubtitle,
                   reuseIdentifier:nil)
     
-    textField = EmailTextField.alloc.initWithFrame([[20,15],[view.frame.size.width - 20,44 - 15]])
+    textField = EmailTextField.alloc.initWithFrame([[20,10],[view.frame.size.width - 37,44 - 15]])
     textField.setTextColor(UIColor.fromHexCode('ff','44','44'))
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone
     textField.delegate = self
@@ -40,7 +38,7 @@ class SettingsController < UITableViewController
     else
       textField.email = EmailsStore.shared.create_email()
     end
-    cell.addSubview(textField) 
+    cell.addSubview(textField)
     cell
   end
   
