@@ -1,4 +1,4 @@
-class EmailsStore
+class EmailsStore < NSObject
   def self.shared
     @shared ||= EmailsStore.new
   end
