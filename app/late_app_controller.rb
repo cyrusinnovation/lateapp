@@ -8,7 +8,10 @@ class LateAppController < UITableViewController
     @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => "Running Late",
                 NSIndexPath.indexPathForRow(1, inSection:0) => "Out Sick",
                 NSIndexPath.indexPathForRow(0, inSection:1) => "Settings"}
-    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f')
+    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
+    tableView.sectionHeaderHeight = 40
+    tableView.sectionFooterHeight = 100
+    tableView.rowHeight = 64
     navigationController.navigationBar.setBackgroundImage(UIImage.imageNamed("banner.png"), forBarMetrics:UIBarMetricsDefault)
   end
   
@@ -34,8 +37,8 @@ class LateAppController < UITableViewController
   end
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-    cell.setBackgroundColor(UIColor.fromHexCode('a6','2e','15'))
-    cell.textLabel.textColor = UIColor.whiteColor
+    cell.setBackgroundColor(UIColor.whiteColor)
+    cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
   end
   
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
@@ -57,11 +60,10 @@ class LateAppController < UITableViewController
   end
   
   def willPresentActionSheet(as)
-    mySize = as.bounds.size
-    myRect = [[0, 0], [mySize.width, mySize.height]]
-    redView = UIImageView.alloc.initWithFrame(myRect)
-    redView.setBackgroundColor(UIColor.fromHexCode('a6','2e','15'))
-    as.insertSubview(redView, atIndex:0)
+    as.subviews[0].setTextColor(UIColor.fromHexCode('44', '44', '44'))
+    actionSheetBackgroundView = UIImageView.alloc.initWithFrame([[0, 0], as.bounds.size])
+    actionSheetBackgroundView.setBackgroundColor(UIColor.fromHexCode('ab','df','f3'))
+    as.insertSubview(actionSheetBackgroundView, atIndex:0)
   end
   
   def actionSheet(as, clickedButtonAtIndex:buttonIndex)
