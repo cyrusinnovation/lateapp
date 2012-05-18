@@ -5,6 +5,8 @@ class SettingsController < UITableViewController
   
   def viewDidLoad
     tableView.allowsSelection = false
+    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
+    
     @keyboardIsShown = false
   end
 
@@ -19,6 +21,11 @@ class SettingsController < UITableViewController
   def tableView(tv, titleForHeaderInSection:section)
     "Team Emails"
   end
+  
+  def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
+    puts cell.subviews
+    cell.subviews[2].textColor = UIColor.fromHexCode('44','44','44') # gray
+  end
 
   def tableView(tv, cellForRowAtIndexPath:indexPath)
     cell = UITableViewCell.alloc.initWithStyle(
@@ -26,6 +33,7 @@ class SettingsController < UITableViewController
                   reuseIdentifier:nil)
     
     textField = EmailTextField.alloc.initWithFrame([[20,15],[view.frame.size.width - 20,44 - 15]])
+    textField.setTextColor(UIColor.fromHexCode('ff','44','44'))
     textField.delegate = self
     if indexPath.row < EmailsStore.shared.emails.length
       textField.email = EmailsStore.shared.emails[indexPath.row]

@@ -10,10 +10,17 @@ class LateAppController < UITableViewController
                 NSIndexPath.indexPathForRow(0, inSection:1) => "Settings"}
     tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
     tableView.sectionHeaderHeight = 40
-    tableView.sectionFooterHeight = 100
     tableView.rowHeight = 64
     navigationController.navigationBar.setBackgroundImage(UIImage.imageNamed("banner.png"), forBarMetrics:UIBarMetricsDefault)
   end
+  
+  def tableView(tv, heightForFooterInSection:section)
+    if section == 0
+      90
+    else
+      0
+    end
+  end  
   
   def tableView(tv, numberOfRowsInSection:section)
     if section == 0
@@ -37,7 +44,7 @@ class LateAppController < UITableViewController
   end
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-    cell.setBackgroundColor(UIColor.whiteColor)
+    #cell.setBackgroundColor(UIColor.whiteColor)
     cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
   end
   
