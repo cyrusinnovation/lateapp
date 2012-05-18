@@ -22,23 +22,6 @@ class EmailSender
   # Dismisses the email composition interface when users tap Cancel or Send. 
   # Proceeds to update the message field with the result of the operation.
   def mailComposeController(controller, didFinishWithResult:result, error:error)
-
-    # # Notifies users about errors associated with the interface
-    # case result
-    #   when MFMailComposeResultCancelled
-    #     break
-    #   when MFMailComposeResultSaved
-    #     break
-    #   when MFMailComposeResultSent
-    #     break
-    #   when MFMailComposeResultFailed
-    #     break
-    #   else
-    #     alert = UIAlertView.alloc.initWithTitle("Email", message:"Sending Failed - Unknown Error :-(",
-    #                 delegate:self, cancelButtonTitle:"OK", otherButtonTitles: nil)
-    #     alert.show
-    #   break
-    # end
     controller.dismissModalViewControllerAnimated(true)
   end
   

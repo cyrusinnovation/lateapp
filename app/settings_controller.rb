@@ -34,6 +34,7 @@ class SettingsController < UITableViewController
     
     textField = EmailTextField.alloc.initWithFrame([[20,15],[view.frame.size.width - 20,44 - 15]])
     textField.setTextColor(UIColor.fromHexCode('ff','44','44'))
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone
     textField.delegate = self
     if indexPath.row < EmailsStore.shared.emails.length
       textField.email = EmailsStore.shared.emails[indexPath.row]
