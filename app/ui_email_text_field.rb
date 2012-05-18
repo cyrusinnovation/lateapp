@@ -4,9 +4,9 @@ class EmailTextField < UITextField
     self.placeholder = "Add email..."
     self.keyboardType = UIKeyboardTypeEmailAddress
     self.returnKeyType = UIReturnKeyDone
-    # self.rightView = UIButton.buttonWithType(UIButtonTypeContactAdd)
-    # self.rightViewMode = UITextFieldViewModeWhileEditing
-    # @contacts_button = self.rightView
+    self.rightView = UIButton.buttonWithType(UIButtonTypeContactAdd)
+    self.rightViewMode = UITextFieldViewModeWhileEditing
+    @contacts_button = self.rightView
 
     self
   end
@@ -19,6 +19,10 @@ class EmailTextField < UITextField
     @email = email
     self.text = @email.email
     update_model
+  end
+  
+  def contacts_button
+    @contacts_button
   end
   
   def update_model
