@@ -39,7 +39,7 @@ class SettingsController < UITableViewController
       textField.email = EmailsStore.shared.create_email()
     end
     cell.addSubview(textField)
-    puts textField.contacts_button
+    textField.contacts_button.addTarget(self, action:'showPicker:', forControlEvents:UIControlEventTouchUpInside)
     
     cell
   end
@@ -57,15 +57,15 @@ class SettingsController < UITableViewController
 
 
   def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person)
-    self.displayPerson(person)
-    self.dismissModalViewControllerAnimated(true)
 
-    return false
+
+    return true
   end
 
   def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person,
                                   property:property, identifier:identifier)
-      return false
+      self.dismissModalViewControllerAnimated(true)                                  
+      return true
   end
   
   def standardCellHeight
