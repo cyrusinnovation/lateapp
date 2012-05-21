@@ -39,12 +39,14 @@ class SettingsController < UITableViewController
       textField.email = EmailsStore.shared.create_email()
     end
     cell.addSubview(textField)
-    puts textField.contacts_button
-    
+    textField.contacts_button.addTarget(self, action:'showPicker:', forControlEvents:UIControlEventTouchUpInside)
+
     cell
   end
   
   def showPicker(sender)
+    @current_cell = sender.superview
+    puts @current_cell
     picker = ABPeoplePickerNavigationController.alloc.init
     picker.peoplePickerDelegate = self
 
@@ -53,19 +55,30 @@ class SettingsController < UITableViewController
   
   def peoplePickerNavigationControllerDidCancel(peoplePicker)
     self.dismissModalViewControllerAnimated(true)
+    @current_cell = nil
   end
 
 
   def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person)
-    self.displayPerson(person)
-    self.dismissModalViewControllerAnimated(true)
+    # self.displayPerson(person)
+    # self.dismissModalViewControllerAnimated(true)
 
-    return false
+    return true
   end
 
   def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person,
                                   property:property, identifier:identifier)
-      return false
+      puts "property: #{property}, id: #{identifier}"
+      #textField.textlabel.text = property.getStuff()
+      record_id = ABRecordGetRecordID(person)
+      puts "the record id is: #{record_id}"
+
+      aValueFromPerson = ABRecordCopyValue(person, 0)
+      puts "a puts"
+      puts "a value: #{aValueFromPerson.type}"
+      puts "a value: #{aValueFromPerson.to_s}"
+      @current_cell.textLabel.email = aValueFromPerson
+      return true
   end
   
   def standardCellHeight
