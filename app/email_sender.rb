@@ -1,14 +1,18 @@
 class EmailSender
   
-  def initWithLate(time)
-    @subject = "#{self.titlecase(time)} Late Today"
-    @message = createLateEmailMessage(time)
+  def initWithLate(title, time)
+    @subject = "#{titlecase(title)} Late Today"
+    @message = createLateEmailMessage(title)
+    @statistic = StatisticsStore.shared.create_late(time)
+    
     self
   end
   
   def initWithSick(emailCheckingStatus)
     @subject = "Out Sick Today"
     @message = createSickEmailMessage(emailCheckingStatus)
+    @statistic = StatisticsStore.shared.create_sick()
+    
     self
   end
   
@@ -28,13 +32,15 @@ class EmailSender
    
      # Display
      composer.navigationBar.barStyle = UIBarStyleBlack
-     controller.presentModalViewController(picker, animated:true)
+     controller.presentModalViewController(composer, animated:true)
   end
 
   # Dismisses the email composition interface when users tap Cancel or Send. 
   # Proceeds to update the message field with the result of the operation.
   def mailComposeController(controller, didFinishWithResult:result, error:error)
-    puts "finished with email interface Result: #{result}; Error: #{error}."
+    if (result == MFMailComposeResultSaved || result == MFMailComposeResultSent)
+      StatisticsStore.shared.save_entity(@statistic)
+    end
     controller.dismissModalViewControllerAnimated(true)
   end
   
