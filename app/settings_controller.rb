@@ -49,6 +49,7 @@ class SettingsController < UITableViewController
   def showPicker(sender)
 
     picker = ABPeoplePickerNavigationController.alloc.init
+    picker.displayedProperties = [KABPersonEmailProperty]
     picker.peoplePickerDelegate = self
 
 
