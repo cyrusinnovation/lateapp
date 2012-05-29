@@ -39,14 +39,19 @@ class SettingsController < UITableViewController
       textField.email = EmailsStore.shared.create_email()
     end
     cell.addSubview(textField)
-    puts textField.contacts_button
+    
+    
+    textField.contacts_button.addTarget(self, action:"showPicker:", forControlEvents:UIControlEventTouchUpInside)
     
     cell
   end
   
   def showPicker(sender)
+
     picker = ABPeoplePickerNavigationController.alloc.init
     picker.peoplePickerDelegate = self
+
+
 
     self.presentModalViewController(picker,animated:true)
   end  
@@ -57,14 +62,21 @@ class SettingsController < UITableViewController
 
 
   def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person)
-    self.displayPerson(person)
-    self.dismissModalViewControllerAnimated(true)
-
-    return false
+    return true
   end
 
   def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person,
                                   property:property, identifier:identifier)
+      selected_value = ABRecordCopyValue(person, property)    
+      index = ABMultiValueGetIndexForIdentifier(selected_value, identifier)
+      selected_email_address = ABMultiValueCopyValueAtIndex(selected_value, index)
+      
+      email = EmailsStore.shared.create_email()
+      email.email = selected_email_address
+      EmailsStore.shared.save_email(email)
+      tableView.reloadData
+
+      peoplePicker.dismissViewControllerAnimated(true, completion:lambda do puts "this is the completion"; end)
       return false
   end
   

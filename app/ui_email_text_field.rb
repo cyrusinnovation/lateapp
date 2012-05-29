@@ -7,6 +7,7 @@ class EmailTextField < UITextField
     self.rightView = UIButton.buttonWithType(UIButtonTypeContactAdd)
     self.rightViewMode = UITextFieldViewModeWhileEditing
     @contacts_button = self.rightView
+    
 
     self
   end
