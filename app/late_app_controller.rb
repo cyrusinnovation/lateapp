@@ -74,11 +74,11 @@ class LateAppController < UITableViewController
   
   def actionSheet(as, clickedButtonAtIndex:buttonIndex)
     unless buttonIndex == as.cancelButtonIndex
-      @emailSender ||= EmailSender.alloc.init
+      selected_title = as.buttonTitleAtIndex(buttonIndex)
       if as.title == "How late?"
-        @emailSender.showEmail(self,"#{@emailSender.titlecase(as.buttonTitleAtIndex(buttonIndex))} Late Today", @emailSender.createLateEmailMessage(as.buttonTitleAtIndex(buttonIndex)))
+        EmailSender.alloc.initWithLate(selected_title).showEmail(self)
       else
-        @emailSender.showEmail(self,"Out Sick Today", @emailSender.createSickEmailMessage(as.buttonTitleAtIndex(buttonIndex)))
+        EmailSender.alloc.initWithSick(selected_title).showEmail(self)
       end  
     end
   end

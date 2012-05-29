@@ -1,30 +1,44 @@
 class EmailSender
   
-  def showEmail(controller, subject, message)
+  def initWithLate(time)
+    @subject = "#{self.titlecase(time)} Late Today"
+    @message = createLateEmailMessage(time)
+    self
+  end
+  
+  def initWithSick(emailCheckingStatus)
+    @subject = "Out Sick Today"
+    @message = createSickEmailMessage(emailCheckingStatus)
+    self
+  end
+  
+  def showEmail(controller)
      # Set up email controller
-     picker = MFMailComposeViewController.alloc.init
-     picker.mailComposeDelegate = self
+     composer = MFMailComposeViewController.alloc.init
+     composer.mailComposeDelegate = self
    
      # Set Email properties
      recipients = []
      EmailsStore.shared.emails.each do |email|
        recipients << email.email
      end
-     picker.setToRecipients(recipients)
-     picker.setSubject(subject)
-     picker.setMessageBody(message,isHTML:true)
+     composer.setToRecipients(recipients)
+     composer.setSubject(@subject)
+     composer.setMessageBody(@message,isHTML:true)
    
      # Display
-     picker.navigationBar.barStyle = UIBarStyleBlack
+     composer.navigationBar.barStyle = UIBarStyleBlack
      controller.presentModalViewController(picker, animated:true)
   end
 
   # Dismisses the email composition interface when users tap Cancel or Send. 
   # Proceeds to update the message field with the result of the operation.
   def mailComposeController(controller, didFinishWithResult:result, error:error)
+    puts "finished with email interface Result: #{result}; Error: #{error}."
     controller.dismissModalViewControllerAnimated(true)
   end
   
+  private 
   
   def createLateEmailMessage(time)
     "I am running about #{time} late today. Sorry!"
