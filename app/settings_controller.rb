@@ -74,9 +74,11 @@ class SettingsController < UITableViewController
       email = EmailsStore.shared.create_email()
       email.email = selected_email_address
       EmailsStore.shared.save_email(email)
-      tableView.reloadData
 
-      peoplePicker.dismissViewControllerAnimated(true, completion:lambda do puts "this is the completion"; end)
+      peoplePicker.dismissViewControllerAnimated(true, completion:lambda do 
+        indexPath = NSIndexPath.indexPathForRow(EmailsStore.shared.emails.length-1, inSection:0)
+        tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimationTop)
+      end)
       return false
   end
   
