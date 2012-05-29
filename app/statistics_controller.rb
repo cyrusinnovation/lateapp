@@ -31,4 +31,8 @@ class StatisticsController < UITableViewController
     
     cell
   end
+  
+  def viewDidLoad
+    tableView.allowsSelection = false
+  end
 end

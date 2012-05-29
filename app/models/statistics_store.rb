@@ -17,70 +17,6 @@ class StatisticsStore < NSObject
     end
   end
   
-  def lates_this_month
-    request = NSFetchRequest.alloc.init
-    request.entity = NSEntityDescription.entityForName('Late', inManagedObjectContext:@context)
-    today = NSDate.alloc.init
-    thirty_days_ago = today - (30 * 24 * 60 * 60)
-    predicate = NSPredicate.predicateWithFormat("date >= %@ && date <= %@", argumentArray:[thirty_days_ago, today])
-    request.setPredicate(predicate)
-  
-    error_ptr = Pointer.new(:object)
-    data = @context.executeFetchRequest(request, error:error_ptr)
-    if data == nil
-      raise "Error when fetching data: #{error_ptr[0].description}"
-    end
-    data
-  end  
-
-  def lates_this_year
-    request = NSFetchRequest.alloc.init
-    request.entity = NSEntityDescription.entityForName('Late', inManagedObjectContext:@context)
-    today = NSDate.alloc.init
-    year_ago = today - (365 * 24 * 60 * 60)
-    predicate = NSPredicate.predicateWithFormat("date >= %@ && date <= %@", argumentArray:[year_ago, today])
-    request.setPredicate(predicate)
-
-    error_ptr = Pointer.new(:object)
-    data = @context.executeFetchRequest(request, error:error_ptr)
-    if data == nil
-      raise "Error when fetching data: #{error_ptr[0].description}"
-    end
-    data
-  end
-
-  def sicks_this_month
-    request = NSFetchRequest.alloc.init
-    request.entity = NSEntityDescription.entityForName('Sick', inManagedObjectContext:@context)
-    today = NSDate.alloc.init
-    thirty_days_ago = today - (30 * 24 * 60 * 60)
-    predicate = NSPredicate.predicateWithFormat("date >= %@ && date <= %@", argumentArray:[thirty_days_ago, today])
-    request.setPredicate(predicate)
-
-    error_ptr = Pointer.new(:object)
-    data = @context.executeFetchRequest(request, error:error_ptr)
-    if data == nil
-      raise "Error when fetching data: #{error_ptr[0].description}"
-    end
-    data
-  end
-
-  def sicks_this_year
-    request = NSFetchRequest.alloc.init
-    request.entity = NSEntityDescription.entityForName('Sick', inManagedObjectContext:@context)
-    today = NSDate.alloc.init
-    year_ago = today - (365 * 24 * 60 * 60)
-    predicate = NSPredicate.predicateWithFormat("date >= %@ && date <= %@", argumentArray:[year_ago, today])
-    request.setPredicate(predicate)
-  
-    error_ptr = Pointer.new(:object)
-    data = @context.executeFetchRequest(request, error:error_ptr)
-    if data == nil
-      raise "Error when fetching data: #{error_ptr[0].description}"
-    end
-    data
-  end  
-  
   def sicks
     @sicks ||= begin
       request = NSFetchRequest.alloc.init
@@ -94,6 +30,22 @@ class StatisticsStore < NSObject
       data
     end
   end
+    
+  def lates_this_month
+    ailments_this_month("Late")
+  end  
+  
+  def lates_this_year
+    ailments_this_year("Late")
+  end
+  
+  def sicks_this_month
+    ailments_this_month("Sick")
+  end
+
+  def sicks_this_year
+    ailments_this_year("Sick")
+  end  
   
   def create_late(time)
     model = @context.persistentStoreCoordinator.managedObjectModel
@@ -149,4 +101,36 @@ class StatisticsStore < NSObject
     @context = context
   end
 
+
+  def ailments_this_month(entity)
+    request = NSFetchRequest.alloc.init
+    request.entity = NSEntityDescription.entityForName(entity, inManagedObjectContext:@context)
+    today = NSDate.alloc.init
+    thirty_days_ago = today - (30 * 24 * 60 * 60)
+    predicate = NSPredicate.predicateWithFormat("date >= %@ && date <= %@", argumentArray:[thirty_days_ago, today])
+    request.setPredicate(predicate)
+
+    error_ptr = Pointer.new(:object)
+    data = @context.executeFetchRequest(request, error:error_ptr)
+    if data == nil
+      raise "Error when fetching data: #{error_ptr[0].description}"
+    end
+    data
+  end
+  
+  def ailments_this_year(entity)
+    request = NSFetchRequest.alloc.init
+    request.entity = NSEntityDescription.entityForName(entity, inManagedObjectContext:@context)
+    today = NSDate.alloc.init
+    year_ago = today - (365 * 24 * 60 * 60)
+    predicate = NSPredicate.predicateWithFormat("date >= %@ && date <= %@", argumentArray:[year_ago, today])
+    request.setPredicate(predicate)
+
+    error_ptr = Pointer.new(:object)
+    data = @context.executeFetchRequest(request, error:error_ptr)
+    if data == nil
+      raise "Error when fetching data: #{error_ptr[0].description}"
+    end
+    data
+  end
 end
