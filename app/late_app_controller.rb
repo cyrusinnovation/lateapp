@@ -7,7 +7,9 @@ class LateAppController < UITableViewController
   def viewDidLoad
     @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => "Running Late",
                 NSIndexPath.indexPathForRow(1, inSection:0) => "Out Sick",
-                NSIndexPath.indexPathForRow(0, inSection:1) => "Settings"}
+                NSIndexPath.indexPathForRow(0, inSection:1) => "Statistics",
+                NSIndexPath.indexPathForRow(1, inSection:1) => "Settings"
+                }
     tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
     tableView.sectionHeaderHeight = 40
     tableView.rowHeight = 64
@@ -16,7 +18,7 @@ class LateAppController < UITableViewController
   
   def tableView(tv, heightForFooterInSection:section)
     if section == 0
-      90
+      65
     else
       0
     end
@@ -26,7 +28,7 @@ class LateAppController < UITableViewController
     if section == 0
       2
     else
-      1
+      2
     end
   end
 
@@ -57,9 +59,13 @@ class LateAppController < UITableViewController
       sick_action_sheet = UIActionSheet.alloc.initWithTitle("Will you check Email?", delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil)
       sick_action_sheet.showInView(self.view)
       
+    elsif @actions[indexPath] == "Statistics" 
+      navigationController.pushViewController(StatisticsController.alloc.init, animated:true)
+  
     elsif @actions[indexPath] == "Settings" 
       settings_controller = UIApplication.sharedApplication.delegate.settings_controller
       navigationController.pushViewController(settings_controller, animated:true)
+
     end
 
     tv.deselectRowAtIndexPath(indexPath, animated:true)
