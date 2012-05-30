@@ -12,27 +12,60 @@ class StatisticsController < UITableViewController
   end
   
   def tableView(tv, cellForRowAtIndexPath:indexPath)
-    cell = tv.dequeueReusableCellWithIdentifier("Statistics Cell")
-    cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:"Statistics Cell") if cell.nil?
-    
-    if (0 == indexPath.row && 0 == indexPath.section)              
+
+    if (0 == indexPath.row)
+      cell = tv.dequeueReusableCellWithIdentifier("Monthly Statistics Cell")
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:"Monthly Statistics Cell") if cell.nil?
       cell.textLabel.text = "This Month"
-      cell.detailTextLabel.text = StatisticsStore.shared.lates_this_month.count.to_s
-    elsif (0 == indexPath.row && 1 == indexPath.section)     
-      cell.textLabel.text = "This Month"
-      cell.detailTextLabel.text = StatisticsStore.shared.sicks_this_month.count.to_s
-    elsif (1 == indexPath.row && 0 == indexPath.section)              
-      cell.textLabel.text = "This Year"
-      cell.detailTextLabel.text = StatisticsStore.shared.lates_this_year.count.to_s
-    elsif (1 == indexPath.row && 1 == indexPath.section)     
-      cell.textLabel.text = "This Year"
-      cell.detailTextLabel.text = StatisticsStore.shared.sicks_this_year.count.to_s
+
+      if (0 == indexPath.section)
+        cell.detailTextLabel.text = StatisticsStore.shared.lates_this_month.count.to_s
+      else
+        cell.detailTextLabel.text = StatisticsStore.shared.sicks_this_month.count.to_s
+
+      end
+
+      @detailColor = cell.detailTextLabel.textColor      
+      
+      cell
+    else
+      cell = tv.dequeueReusableCellWithIdentifier("Yearly Statistics Cell")
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:"Yearly Statistics Cell") if cell.nil?
+
+      
+      titleLabel = UILabel.alloc.initWithFrame([[10,5],[200,30]])
+      titleLabel.text = "This Year"
+      titleLabel.backgroundColor = UIColor.colorWithWhite(1.0, alpha:0.0)
+      titleLabel.font = UIFont.boldSystemFontOfSize(17)
+      cell.contentView.addSubview(titleLabel)
+      
+      countLabel = UILabel.alloc.initWithFrame([[280, 5],[40,30]])
+      countLabel.text = (0 == indexPath.section) ? StatisticsStore.shared.lates_this_year.count.to_s : StatisticsStore.shared.sicks_this_year.count.to_s
+      countLabel.backgroundColor = UIColor.colorWithWhite(1.0, alpha:0.0)
+      countLabel.font = UIFont.systemFontOfSize(17)
+      countLabel.textColor = @detailColor
+      countLabel.sizeToFit
+      countLabel.frame = [[290-countLabel.frame.size.width, 5],countLabel.frame.size]
+      cell.contentView.addSubview(countLabel)
+      
+      cell
     end
-    
-    cell
+  end
+
+  def tableView(tv, titleForHeaderInSection:section)
+    return (section == 0) ? "Late" : "Sick"
+  end
+  
+  def tableView(tv, heightForRowAtIndexPath:indexPath)
+    if (indexPath.row == 1)
+      100
+    else
+      44
+    end
   end
   
   def viewDidLoad
     tableView.allowsSelection = false
+    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
   end
 end
