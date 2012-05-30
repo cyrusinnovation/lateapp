@@ -4,7 +4,7 @@ class EmailSender
     @subject = "#{titlecase(title)} Late Today"
     @message = createLateEmailMessage(title)
     @statistic = StatisticsStore.shared.create_late(time)
-    
+    @token = :late
     self
   end
   
@@ -12,36 +12,50 @@ class EmailSender
     @subject = "Out Sick Today"
     @message = createOutEmailMessage(emailCheckingStatus)
     @statistic = StatisticsStore.shared.create_out()
-    
+    @token = :out
     self
   end
   
   def showEmail(controller)
-     # Set up email controller
-     composer = MFMailComposeViewController.alloc.init
-     composer.mailComposeDelegate = self
-   
-     # Set Email properties
-     recipients = []
-     EmailsStore.shared.emails.each do |email|
-       recipients << email.email
-     end
-     composer.setToRecipients(recipients)
-     composer.setSubject(@subject)
-     composer.setMessageBody(@message,isHTML:true)
-   
-     # Display
-     composer.navigationBar.barStyle = UIBarStyleBlack
-     controller.presentModalViewController(composer, animated:true)
+    @controller = controller
+    # Set up email controller
+    composer = MFMailComposeViewController.alloc.init
+    composer.mailComposeDelegate = self
+    
+    # Set Email properties
+    recipients = []
+    EmailsStore.shared.emails.each do |email|
+      recipients << email.email
+    end
+    composer.setToRecipients(recipients)
+    composer.setSubject(@subject)
+    composer.setMessageBody(@message,isHTML:true)
+    
+    # Display
+    composer.navigationBar.barStyle = UIBarStyleBlack
+    @controller.presentModalViewController(composer, animated:true)
   end
 
-  # Dismisses the email composition interface when users tap Cancel or Send. 
-  # Proceeds to update the message field with the result of the operation.
+  def humor
+    {
+      :late => "Travel safely.",
+      :out => "Feel better!"
+    }
+  end
+
   def mailComposeController(controller, didFinishWithResult:result, error:error)
     if (result == MFMailComposeResultSaved || result == MFMailComposeResultSent)
       StatisticsStore.shared.save_entity(@statistic)
     end
-    controller.dismissModalViewControllerAnimated(true)
+    controller.dismissViewControllerAnimated(true, completion:lambda do
+      flash_message = {
+        MFMailComposeResultSaved => "Saved message to drafts folder.",
+        MFMailComposeResultSent => "Message sent! #{humor[@token]}",
+        MFMailComposeResultFailed => "Something went wrong. Maybe call someone instead."
+      }
+      
+      @controller.flash(flash_message[result]) unless flash_message[result].nil?
+    end)
   end
   
   private 

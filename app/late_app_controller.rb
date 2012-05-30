@@ -93,4 +93,7 @@ class LateAppController < UITableViewController
     end
   end
 
+  def flash(msg)
+    UIAlertView.alloc.initWithTitle("", message:msg, delegate:self, cancelButtonTitle:"OK", otherButtonTitles:nil).show
+  end
 end
