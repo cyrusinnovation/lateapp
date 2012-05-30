@@ -4,7 +4,7 @@ class Histogram
     outs = day_of_week_counts(StatisticsStore.shared.sicks_this_year.collect(&:date))
     
     {
-      range: [0, range_from(lates, outs)],
+      range: range_from(lates, outs),
       lates: lates,
       outs: outs
     }
@@ -12,11 +12,17 @@ class Histogram
   
   private
   
+  def self.days_of_week()
+    ["Su", "M", "T", "W", "Th", "F", "S"]
+  end
+  
   def self.day_of_week_counts(dates)
-    result = {sunday:0, monday:0, tuesday:0, wednesday:0, thursday:0, friday:0,  saturday:0}
+    result = {}
+    self.days_of_week.each {|d| result[d] = 0}
+    
     dates.each do |date|
-      symbol = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday][date.wday]
-      result[symbol] += 1
+      key = self.days_of_week[date.wday]
+      result[key] += 1
     end
     
     result
