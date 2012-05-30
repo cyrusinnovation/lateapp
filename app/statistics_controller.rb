@@ -36,6 +36,7 @@ class StatisticsController < UITableViewController
       titleLabel = UILabel.alloc.initWithFrame([[10,5],[200,30]])
       titleLabel.text = "This Year"
       titleLabel.backgroundColor = UIColor.colorWithWhite(1.0, alpha:0.0)
+      titleLabel.textColor = UIColor.fromHexCode('44','44','44')
       titleLabel.font = UIFont.boldSystemFontOfSize(17)
       cell.contentView.addSubview(titleLabel)
       
@@ -49,12 +50,20 @@ class StatisticsController < UITableViewController
       cell.contentView.addSubview(countLabel)
       
       
-      histogramView = HistogramView.alloc.initWithFrame(CGRectMake(10, 40, 280, 80))
+      histogramView = HistogramView.alloc.initWithFrame(CGRectMake(10, 35, 280, 80))
       cell.contentView.addSubview(histogramView)
       
       cell
     end
   end
+
+  
+  def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
+    if (indexPath.row == 0)
+      cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
+    end
+  end
+
 
   def tableView(tv, titleForHeaderInSection:section)
     return (section == 0) ? "Late" : "Sick"
