@@ -30,9 +30,7 @@ class StatisticsStore < NSObject
       data
     end
   end
-  
-  
-    
+
   def lates_this_month
     ailments_this_month("Late")
   end  
