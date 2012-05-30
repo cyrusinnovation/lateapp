@@ -8,10 +8,10 @@ class EmailSender
     self
   end
   
-  def initWithSick(emailCheckingStatus)
+  def initWithOut(emailCheckingStatus)
     @subject = "Out Sick Today"
-    @message = createSickEmailMessage(emailCheckingStatus)
-    @statistic = StatisticsStore.shared.create_sick()
+    @message = createOutEmailMessage(emailCheckingStatus)
+    @statistic = StatisticsStore.shared.create_out()
     
     self
   end
@@ -50,7 +50,7 @@ class EmailSender
     "I am running about #{time} late today. Sorry!"
   end
   
-  def createSickEmailMessage(emailCheckingStatus)
+  def createOutEmailMessage(emailCheckingStatus)
     if emailCheckingStatus == "Will do"
       "I am out sick. I will check my email periodically."
     elsif emailCheckingStatus == "Maybe later"

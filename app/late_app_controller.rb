@@ -56,8 +56,8 @@ class LateAppController < UITableViewController
       late_action_sheet.showInView(self.view)
       
     elsif @actions[indexPath] == "Out Sick" 
-      sick_action_sheet = UIActionSheet.alloc.initWithTitle("Will you check Email?", delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil)
-      sick_action_sheet.showInView(self.view)
+      out_action_sheet = UIActionSheet.alloc.initWithTitle("Will you check Email?", delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil)
+      out_action_sheet.showInView(self.view)
       
     elsif @actions[indexPath] == "Statistics" 
       navigationController.pushViewController(StatisticsController.alloc.init, animated:true)
@@ -88,7 +88,7 @@ class LateAppController < UITableViewController
         EmailSender.alloc.initWithLate(selected_title, time).showEmail(self)
       else
         selected_title = as.buttonTitleAtIndex(buttonIndex)
-        EmailSender.alloc.initWithSick(selected_title).showEmail(self)
+        EmailSender.alloc.initWithOut(selected_title).showEmail(self)
       end  
     end
   end

@@ -1,7 +1,7 @@
 class Histogram
   def self.histogram
     lates = day_of_week_counts(StatisticsStore.shared.lates_this_year.collect(&:date))
-    outs = day_of_week_counts(StatisticsStore.shared.sicks_this_year.collect(&:date))
+    outs = day_of_week_counts(StatisticsStore.shared.outs_this_year.collect(&:date))
     
     {
       range: range_from(lates, outs),

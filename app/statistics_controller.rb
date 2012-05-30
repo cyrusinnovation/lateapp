@@ -21,7 +21,7 @@ class StatisticsController < UITableViewController
       if (0 == indexPath.section)
         cell.detailTextLabel.text = StatisticsStore.shared.lates_this_month.count.to_s
       else
-        cell.detailTextLabel.text = StatisticsStore.shared.sicks_this_month.count.to_s
+        cell.detailTextLabel.text = StatisticsStore.shared.outs_this_month.count.to_s
 
       end
 
@@ -41,7 +41,7 @@ class StatisticsController < UITableViewController
       cell.contentView.addSubview(titleLabel)
       
       countLabel = UILabel.alloc.initWithFrame([[280, 5],[40,30]])
-      countLabel.text = (0 == indexPath.section) ? StatisticsStore.shared.lates_this_year.count.to_s : StatisticsStore.shared.sicks_this_year.count.to_s
+      countLabel.text = (0 == indexPath.section) ? StatisticsStore.shared.lates_this_year.count.to_s : StatisticsStore.shared.outs_this_year.count.to_s
       countLabel.backgroundColor = UIColor.colorWithWhite(1.0, alpha:0.0)
       countLabel.font = UIFont.systemFontOfSize(17)
       countLabel.textColor = @detailColor
@@ -67,7 +67,7 @@ class StatisticsController < UITableViewController
 
 
   def tableView(tv, titleForHeaderInSection:section)
-    return (section == 0) ? "Late" : "Sick"
+    return (section == 0) ? "Late" : "Out"
   end
   
   def tableView(tv, heightForRowAtIndexPath:indexPath)

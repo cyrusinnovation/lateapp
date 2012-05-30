@@ -1,9 +1,9 @@
-class Sick < NSManagedObject
+class Out < NSManagedObject
   def self.entity
     @entity ||= begin
       entity = NSEntityDescription.alloc.init
-      entity.name = 'Sick'
-      entity.managedObjectClassName = 'Sick'
+      entity.name = 'Out'
+      entity.managedObjectClassName = 'Out'
       entity.properties = 
         ['date', NSDateAttributeType].each_slice(2).map do |name, type|
             property = NSAttributeDescription.alloc.init

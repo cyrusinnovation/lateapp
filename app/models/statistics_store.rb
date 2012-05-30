@@ -17,10 +17,10 @@ class StatisticsStore < NSObject
     end
   end
   
-  def sicks
-    @sicks ||= begin
+  def outs
+    @outs ||= begin
       request = NSFetchRequest.alloc.init
-      request.entity = NSEntityDescription.entityForName('Sick', inManagedObjectContext:@context)
+      request.entity = NSEntityDescription.entityForName('Out', inManagedObjectContext:@context)
 
       error_ptr = Pointer.new(:object)
       data = @context.executeFetchRequest(request, error:error_ptr)
@@ -39,12 +39,12 @@ class StatisticsStore < NSObject
     ailments_this_year("Late")
   end
   
-  def sicks_this_month
-    ailments_this_month("Sick")
+  def outs_this_month
+    ailments_this_month("Out")
   end
 
-  def sicks_this_year
-    ailments_this_year("Sick")
+  def outs_this_year
+    ailments_this_year("Out")
   end  
   
   def create_late(time)
@@ -57,13 +57,13 @@ class StatisticsStore < NSObject
     late
   end  
 
-  def create_sick
+  def create_out
     model = @context.persistentStoreCoordinator.managedObjectModel
-    edesc = model.entitiesByName.objectForKey('Sick')
-    sick = NSManagedObject.alloc.initWithEntity(edesc, insertIntoManagedObjectContext:nil)
-    sick.date = NSDate.alloc.init
+    edesc = model.entitiesByName.objectForKey('Out')
+    out = NSManagedObject.alloc.initWithEntity(edesc, insertIntoManagedObjectContext:nil)
+    out.date = NSDate.alloc.init
     
-    sick
+    out
   end
   
   def save_entity(entity)
@@ -80,14 +80,14 @@ class StatisticsStore < NSObject
     unless @context.save(error_ptr)
       raise "Error when saving the model: #{error_ptr[0].description}"
     end
-    @sicks = nil
+    @outs = nil
     @lates = nil
   end
   
 
   def initialize
     model = NSManagedObjectModel.alloc.init
-    model.entities = [Late.entity, Sick.entity]
+    model.entities = [Late.entity, Out.entity]
 
     store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Statistics.sqlite'))
