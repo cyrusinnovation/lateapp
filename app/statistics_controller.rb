@@ -49,8 +49,9 @@ class StatisticsController < UITableViewController
       countLabel.frame = [[290-countLabel.frame.size.width, 5],countLabel.frame.size]
       cell.contentView.addSubview(countLabel)
       
-      
-      histogramView = HistogramView.alloc.initWithFrame(CGRectMake(10, 35, 280, 80))
+
+      histogram = Histogram.histogram
+      histogramView = HistogramView.alloc.initWithFrame(CGRectMake(10, 40, 280, 80), andData:histogram[(0 == indexPath.section) ? :lates : :outs], max:histogram[:range] )
       cell.contentView.addSubview(histogramView)
       
       cell
