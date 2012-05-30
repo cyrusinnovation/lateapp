@@ -48,6 +48,10 @@ class StatisticsController < UITableViewController
       countLabel.frame = [[290-countLabel.frame.size.width, 5],countLabel.frame.size]
       cell.contentView.addSubview(countLabel)
       
+      
+      histogramView = HistogramView.alloc.initWithFrame(CGRectMake(10, 40, 280, 80))
+      cell.contentView.addSubview(histogramView)
+      
       cell
     end
   end
@@ -58,7 +62,7 @@ class StatisticsController < UITableViewController
   
   def tableView(tv, heightForRowAtIndexPath:indexPath)
     if (indexPath.row == 1)
-      100
+      200
     else
       44
     end
