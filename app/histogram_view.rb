@@ -8,10 +8,12 @@ class HistogramView < UIView
       label.font = UIFont.systemFontOfSize(14)
       label.text = day
       self.addSubview(label)
+      
+      img = UIImageView.alloc.initWithImage(UIImage.imageNamed("histogram.png"))
+      max_width = 200
+      img.frame = [[40,22*index],[200,22]]
+      self.addSubview(img)
     end
-    
-    @data = Histogram.histogram
-
     
     self
   end
