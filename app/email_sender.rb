@@ -2,7 +2,7 @@ class EmailSender
   
   def initWithLate(title, time)
     @subject = "#{titlecase(title)} Late Today"
-    @message = createLateEmailMessage(title)
+    @message = createLateEmailMessage(title) + "<br><br>" + trademark
     @statistic = StatisticsStore.shared.create_late(time)
     @token = :late
     self
@@ -10,7 +10,7 @@ class EmailSender
   
   def initWithOut(emailCheckingStatus)
     @subject = "Out Sick Today"
-    @message = createOutEmailMessage(emailCheckingStatus)
+    @message = createOutEmailMessage(emailCheckingStatus) + "<br><br>" + trademark
     @statistic = StatisticsStore.shared.create_out()
     @token = :out
     self
@@ -29,7 +29,7 @@ class EmailSender
     end
     composer.setToRecipients(recipients)
     composer.setSubject(@subject)
-    composer.setMessageBody(@message,isHTML:true)
+    composer.setMessageBody(@message, isHTML:true)
     
     # Display
     composer.navigationBar.barStyle = UIBarStyleBlack
@@ -62,6 +62,10 @@ class EmailSender
   
   def createLateEmailMessage(time)
     "I am running about #{time} late today. Sorry!"
+  end
+  
+  def trademark
+    "<em>Quickly composed by <a href=\"http://itunes.apple.com/us/app/im-late!/id528671018?ls=1&mt=8\">I'm Late!</a></em>" 
   end
   
   def createOutEmailMessage(emailCheckingStatus)
