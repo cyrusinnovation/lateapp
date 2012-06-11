@@ -40,8 +40,6 @@ class EmailsStore < NSObject
   private
 
   def initialize
-    #model = NSManagedObjectModel.alloc.init
-    #model.entities = [Email.entity]
     model = NSManagedObjectModel.mergedModelFromBundles(nil)
 
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Emails.sqlite'))
@@ -73,16 +71,5 @@ class EmailsStore < NSObject
   
   def migrate_to(dest_model, url)
     puts "MIGRATE_TO"
-#    history = [Email000]
-#    history.each_with_index do |v, i|
-#      model = NSManagedObjectModel.alloc.init
-#      model.entities = [v.entity]
-#      store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Emails.sqlite'))
-#      error_ptr = Pointer.new(:object)
-#      metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(nil, URL:store_url, error:error_ptr)
-#      if(model.isConfiguration(nil, compatibleWithStoreMetadata:metadata))
-#        v.migrate_up(model, dest_model, url) #dest_model is wrong...only works when there's just 1 migration
-#      end
-#    end
   end
 end
