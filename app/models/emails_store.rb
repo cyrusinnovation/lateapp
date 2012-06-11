@@ -31,7 +31,7 @@ class EmailsStore < NSObject
   end
   
   def save_email(email)
-    if email.new? and email.email != ""
+    if email.managedObjectContext.nil? and email.email != ""
       @context.insertObject(email)
     end
     save
@@ -40,11 +40,19 @@ class EmailsStore < NSObject
   private
 
   def initialize
-    model = NSManagedObjectModel.alloc.init
-    model.entities = [Email.entity]
+    #model = NSManagedObjectModel.alloc.init
+    #model.entities = [Email.entity]
+    model = NSManagedObjectModel.mergedModelFromBundles(nil)
 
-    store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Emails.sqlite'))
+    
+    error_ptr = Pointer.new(:object)
+    metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(nil, URL:store_url, error:error_ptr)
+    if !metadata.nil? && !model.isConfiguration(nil, compatibleWithStoreMetadata:metadata)
+      migrate_to(model, store_url)
+    end
+    
+    store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
     error_ptr = Pointer.new(:object)
     unless store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:nil, error:error_ptr)
       raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
@@ -61,5 +69,20 @@ class EmailsStore < NSObject
       raise "Error when saving the model: #{error_ptr[0].description}"
     end
     @emails = nil
+  end
+  
+  def migrate_to(dest_model, url)
+    puts "MIGRATE_TO"
+#    history = [Email000]
+#    history.each_with_index do |v, i|
+#      model = NSManagedObjectModel.alloc.init
+#      model.entities = [v.entity]
+#      store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Emails.sqlite'))
+#      error_ptr = Pointer.new(:object)
+#      metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(nil, URL:store_url, error:error_ptr)
+#      if(model.isConfiguration(nil, compatibleWithStoreMetadata:metadata))
+#        v.migrate_up(model, dest_model, url) #dest_model is wrong...only works when there's just 1 migration
+#      end
+#    end
   end
 end
