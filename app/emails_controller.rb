@@ -1,4 +1,6 @@
 class EmailsController < UITableViewController
+  attr_accessor :current_group_name
+  
   def loadView
     self.tableView = UITableView.alloc.initWithFrame([[0,0],[320,460-44]], style: UITableViewStyleGrouped)
   end
@@ -8,16 +10,21 @@ class EmailsController < UITableViewController
     tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
   end
 
+  def viewWillAppear(animated)
+    tableView.reloadData
+  end
+
   def numberOfSectionsInTableView(tv)
     1
   end
   
   def tableView(tv, numberOfRowsInSection:section)
-    EmailsStore.shared.emails.length + 1
+    
+    current_emails.length + 1
   end
   
   def tableView(tv, titleForHeaderInSection:section)
-    "Team Emails"
+    "#{current_group_name} Emails"
   end
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
@@ -33,10 +40,11 @@ class EmailsController < UITableViewController
     textField.setTextColor(UIColor.fromHexCode('ff','44','44'))
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone
     textField.delegate = self
-    if indexPath.row < EmailsStore.shared.emails.length
-      textField.email = EmailsStore.shared.emails[indexPath.row]
+    if indexPath.row < current_emails.length
+      textField.email = current_emails[indexPath.row]
     else
       textField.email = EmailsStore.shared.create_email()
+      textField.email.group = current_group_name
     end
     cell.addSubview(textField)
     
@@ -92,7 +100,7 @@ class EmailsController < UITableViewController
   end
   
   def tableView(tv, editingStyleForRowAtIndexPath:indexPath)
-    if indexPath.row < EmailsStore.shared.emails.length and !@editing
+    if indexPath.row < current_emails.length and !@editing
       UITableViewCellEditingStyleDelete
     else
       UITableViewCellEditingStyleNone
@@ -101,7 +109,7 @@ class EmailsController < UITableViewController
   
   def tableView(tv, commitEditingStyle:editingStyle, forRowAtIndexPath:indexPath )
     if (editingStyle == UITableViewCellEditingStyleDelete)
-      EmailsStore.shared.remove(EmailsStore.shared.emails[indexPath.row])
+      EmailsStore.shared.remove(current_emails[indexPath.row])
       tv.deleteRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimationFade)
     end
   end
@@ -120,6 +128,12 @@ class EmailsController < UITableViewController
   
   def textFieldShouldReturn(textField)
     textField.resignFirstResponder
+  end
+  
+  private
+  
+  def current_emails
+    EmailsStore.shared.emails_in_group(current_group_name)
   end
   
 end

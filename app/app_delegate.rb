@@ -15,5 +15,9 @@ class AppDelegate
   def emails_controller
     @emails_controller ||= EmailsController.alloc.init
   end
+  
+  def groups_controller
+    @groups_controller ||= GroupsController.alloc.init
+  end
  
 end
