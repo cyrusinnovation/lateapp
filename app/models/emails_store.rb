@@ -40,7 +40,7 @@ class EmailsStore < NSObject
   private
 
   def initialize
-    model = NSManagedObjectModel.mergedModelFromBundles(nil)
+    model = StoreHelper.model_restricted_to_entities_named(['Email'])
 
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Emails.sqlite'))
     
