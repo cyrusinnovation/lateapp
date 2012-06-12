@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1171" systemVersion="11D50" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Late" syncable="YES">
+        <attribute name="date" attributeType="Date" syncable="YES"/>
+        <attribute name="how_late" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Out" syncable="YES">
+        <attribute name="date" attributeType="Date" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Late" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Out" positionX="160" positionY="192" width="128" height="60"/>
+    </elements>
+</model>

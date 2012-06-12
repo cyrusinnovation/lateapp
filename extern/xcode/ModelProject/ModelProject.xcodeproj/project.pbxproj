@@ -16,6 +16,7 @@
 		96A35F75158689E300C8B754 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A35F74158689E300C8B754 /* AppDelegate.m */; };
 		96A35F78158689E300C8B754 /* ModelProject.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96A35F76158689E300C8B754 /* ModelProject.xcdatamodeld */; };
 		96A35FA815869C3C00C8B754 /* EmailDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96A35FA615869C3C00C8B754 /* EmailDataModel.xcdatamodeld */; };
+		96A35FB015869F4800C8B754 /* StatisticsDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96A35FAE15869F4800C8B754 /* StatisticsDataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		96A35F74158689E300C8B754 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		96A35F77158689E300C8B754 /* ModelProject.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ModelProject.xcdatamodel; sourceTree = "<group>"; };
 		96A35FA715869C3C00C8B754 /* EmailDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EmailDataModel.xcdatamodel; sourceTree = "<group>"; };
+		96A35FAF15869F4800C8B754 /* StatisticsDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StatisticsDataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 		96A35F53158689E200C8B754 = {
 			isa = PBXGroup;
 			children = (
+				96A35FAE15869F4800C8B754 /* StatisticsDataModel.xcdatamodeld */,
 				96A35FA615869C3C00C8B754 /* EmailDataModel.xcdatamodeld */,
 				96A35F6A158689E300C8B754 /* ModelProject */,
 				96A35F61158689E300C8B754 /* Frameworks */,
@@ -166,6 +169,7 @@
 				96A35F75158689E300C8B754 /* AppDelegate.m in Sources */,
 				96A35F78158689E300C8B754 /* ModelProject.xcdatamodeld in Sources */,
 				96A35FA815869C3C00C8B754 /* EmailDataModel.xcdatamodeld in Sources */,
+				96A35FB015869F4800C8B754 /* StatisticsDataModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +298,17 @@
 			currentVersion = 96A35FA715869C3C00C8B754 /* EmailDataModel.xcdatamodel */;
 			name = EmailDataModel.xcdatamodeld;
 			path = ../../../resources/EmailDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		96A35FAE15869F4800C8B754 /* StatisticsDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				96A35FAF15869F4800C8B754 /* StatisticsDataModel.xcdatamodel */,
+			);
+			currentVersion = 96A35FAF15869F4800C8B754 /* StatisticsDataModel.xcdatamodel */;
+			name = StatisticsDataModel.xcdatamodeld;
+			path = ../../../resources/StatisticsDataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
