@@ -37,6 +37,26 @@ class BasicStore < NSObject
     NSManagedObject.alloc.initWithEntity(desc, insertIntoManagedObjectContext:nil)
   end
   
+  def merge_new(entity)
+    if entity.managedObjectContext.nil?
+      @context.insertObject(entity)
+    end
+  end
+  
+  def persist
+    error_ptr = Pointer.new(:object)
+    unless @context.save(error_ptr)
+      raise "Error when saving the model: #{error_ptr[0].description}"
+    end
+    @cache.clear
+  end
+
+  def remove(entity)
+    @context.deleteObject(entity)
+    persist
+  end
+  
+
   private
   def model_restricted_to_entities_named(names_arr)
     m = NSManagedObjectModel.mergedModelFromBundles(nil)

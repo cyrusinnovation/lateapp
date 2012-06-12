@@ -101,7 +101,7 @@ class SettingsController < UITableViewController
   
   def tableView(tv, commitEditingStyle:editingStyle, forRowAtIndexPath:indexPath )
     if (editingStyle == UITableViewCellEditingStyleDelete)
-      EmailsStore.shared.remove_email(EmailsStore.shared.emails[indexPath.row])
+      EmailsStore.shared.remove(EmailsStore.shared.emails[indexPath.row])
       tv.deleteRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimationFade)
     end
   end

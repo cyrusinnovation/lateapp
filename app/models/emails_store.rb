@@ -13,29 +13,14 @@ class EmailsStore < BasicStore
     email
   end  
 
-  def remove_email(email)
-    @context.deleteObject(email)
-    save
-  end
-  
   def save_email(email)
-    if email.managedObjectContext.nil? and email.email != ""
-      @context.insertObject(email)
-    end
-    save
+    merge_new(email) unless email.email == ""
+    persist
   end
   
   private
 
   def initialize
     super(['Email'], 'Emails.sqlite')
-  end
-
-  def save
-    error_ptr = Pointer.new(:object)
-    unless @context.save(error_ptr)
-      raise "Error when saving the model: #{error_ptr[0].description}"
-    end
-    @cache.clear
   end
 end

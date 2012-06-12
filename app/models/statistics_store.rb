@@ -44,22 +44,11 @@ class StatisticsStore < BasicStore
   end
   
   def save_entity(entity)
-    if entity.managedObjectContext.nil? and entity.date != nil
-      @context.insertObject(entity)
-    end
-    save
+    merge_new(entity) unless entity.date.nil?
+    persist
   end
 
   private
-  
-  def save 
-    error_ptr = Pointer.new(:object)
-    unless @context.save(error_ptr)
-      raise "Error when saving the model: #{error_ptr[0].description}"
-    end
-    @cache.clear
-  end
-  
 
   def initialize
     super(['Late', 'Out'], 'Statistics.sqlite')
