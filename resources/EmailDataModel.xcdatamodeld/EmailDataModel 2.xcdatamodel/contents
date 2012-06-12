@@ -4,7 +4,11 @@
         <attribute name="email" attributeType="String" syncable="YES"/>
         <attribute name="group" attributeType="String" defaultValueString="Work" syncable="YES"/>
     </entity>
+    <entity name="Group" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Email" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="Group" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>
