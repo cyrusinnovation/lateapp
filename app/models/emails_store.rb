@@ -1,26 +1,16 @@
-class EmailsStore < NSObject
+class EmailsStore < BasicStore
   def self.shared
     @shared ||= EmailsStore.new
   end
 
   def emails
     @emails ||= begin
-      request = NSFetchRequest.alloc.init
-      request.entity = NSEntityDescription.entityForName('Email', inManagedObjectContext:@context)
-
-      error_ptr = Pointer.new(:object)
-      data = @context.executeFetchRequest(request, error:error_ptr)
-      if data == nil
-        raise "Error when fetching data: #{error_ptr[0].description}"
-      end
-      data
+      find_all('Email')
     end
   end
   
   def create_email
-    model = @context.persistentStoreCoordinator.managedObjectModel
-    edesc = model.entitiesByName.objectForKey('Email')
-    email = NSManagedObject.alloc.initWithEntity(edesc, insertIntoManagedObjectContext:nil)
+    email = create_managed_object_for_key('Email')
     email.email = ''
     email
   end  
@@ -40,19 +30,7 @@ class EmailsStore < NSObject
   private
 
   def initialize
-    model = StoreHelper.model_restricted_to_entities_named(['Email'])
-
-    store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Emails.sqlite'))
-    
-    store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
-    error_ptr = Pointer.new(:object)
-    unless store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:StoreHelper.std_lightweight_migration_options, error:error_ptr)
-      raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
-    end
-
-    context = NSManagedObjectContext.alloc.init
-    context.persistentStoreCoordinator = store
-    @context = context
+    super(['Email'], 'Emails.sqlite')
   end
 
   def save

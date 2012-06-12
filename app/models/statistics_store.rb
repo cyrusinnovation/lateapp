@@ -1,36 +1,21 @@
-class StatisticsStore < NSObject
+class StatisticsStore < BasicStore
   def self.shared
     @shared ||= StatisticsStore.new
   end
 
   def lates
     @lates ||= begin
-      request = NSFetchRequest.alloc.init
-      request.entity = NSEntityDescription.entityForName('Late', inManagedObjectContext:@context)
-
-      error_ptr = Pointer.new(:object)
-      data = @context.executeFetchRequest(request, error:error_ptr)
-      if data == nil
-        raise "Error when fetching data: #{error_ptr[0].description}"
-      end
-      data
+      find_all('Late')
     end
   end
   
   def outs
     @outs ||= begin
-      request = NSFetchRequest.alloc.init
-      request.entity = NSEntityDescription.entityForName('Out', inManagedObjectContext:@context)
-
-      error_ptr = Pointer.new(:object)
-      data = @context.executeFetchRequest(request, error:error_ptr)
-      if data == nil
-        raise "Error when fetching data: #{error_ptr[0].description}"
-      end
-      data
+      find_all('Out')
     end
   end
 
+  
   def lates_this_month
     ailments_this_month("Late")
   end  
@@ -48,9 +33,7 @@ class StatisticsStore < NSObject
   end  
   
   def create_late(time)
-    model = @context.persistentStoreCoordinator.managedObjectModel
-    edesc = model.entitiesByName.objectForKey('Late')
-    late = NSManagedObject.alloc.initWithEntity(edesc, insertIntoManagedObjectContext:nil)
+    late = create_managed_object_for_key('Late')
     late.date = NSDate.alloc.init
     late.how_late = time
     
@@ -58,9 +41,7 @@ class StatisticsStore < NSObject
   end  
 
   def create_out
-    model = @context.persistentStoreCoordinator.managedObjectModel
-    edesc = model.entitiesByName.objectForKey('Out')
-    out = NSManagedObject.alloc.initWithEntity(edesc, insertIntoManagedObjectContext:nil)
+    out = create_managed_object_for_key('Late')
     out.date = NSDate.alloc.init
     
     out
@@ -86,19 +67,7 @@ class StatisticsStore < NSObject
   
 
   def initialize
-    model = StoreHelper.model_restricted_to_entities_named(['Late', 'Out'])
-
-    store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Statistics.sqlite'))
-
-    store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
-    error_ptr = Pointer.new(:object)
-    unless store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:nil, error:error_ptr)
-      raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
-    end
-
-    context = NSManagedObjectContext.alloc.init
-    context.persistentStoreCoordinator = store
-    @context = context
+    super(['Late', 'Out'], 'Statistics.sqlite')
   end
 
 
