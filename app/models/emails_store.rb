@@ -70,6 +70,6 @@ class EmailsStore < NSObject
   end
   
   def migrate_to(dest_model, url)
-    puts "MIGRATE_TO"
+    puts "EMAIL_STORE MIGRATE_TO"
   end
 end
