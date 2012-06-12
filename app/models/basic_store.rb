@@ -55,7 +55,20 @@ class BasicStore < NSObject
     @context.deleteObject(entity)
     persist
   end
-  
+
+  def fetch(entity_name, predicate_format, predicate_arguments)
+    request = NSFetchRequest.alloc.init
+    request.entity = NSEntityDescription.entityForName(entity_name, inManagedObjectContext:@context)
+    predicate = NSPredicate.predicateWithFormat(predicate_format, argumentArray:predicate_arguments)
+    request.setPredicate(predicate)
+
+    error_ptr = Pointer.new(:object)
+    data = @context.executeFetchRequest(request, error:error_ptr)
+    if data == nil
+      raise "Error when fetching data: #{error_ptr[0].description}"
+    end
+    data
+  end  
 
   private
   def model_restricted_to_entities_named(names_arr)
