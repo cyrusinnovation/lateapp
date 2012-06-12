@@ -3,15 +3,26 @@ class StatisticsStore < BasicStore
     @shared ||= StatisticsStore.new
   end
 
-  def lates
-    all('Late')
-  end
-  
-  def outs
-    all('Out')
+  def create_late(time)
+    late = create_managed_object_for_key('Late')
+    late.date = NSDate.alloc.init
+    late.how_late = time
+    
+    late
   end
 
+  def create_out
+    out = create_managed_object_for_key('Out')
+    out.date = NSDate.alloc.init
+    
+    out
+  end
   
+  def save_entity(entity)
+    merge_new(entity) unless entity.date.nil?
+    persist
+  end
+
   def lates_this_month
     ailments_this_month("Late")
   end  
@@ -27,29 +38,8 @@ class StatisticsStore < BasicStore
   def outs_this_year
     ailments_this_year("Out")
   end  
-  
-  def create_late(time)
-    late = create_managed_object_for_key('Late')
-    late.date = NSDate.alloc.init
-    late.how_late = time
-    
-    late
-  end  
-
-  def create_out
-    out = create_managed_object_for_key('Out')
-    out.date = NSDate.alloc.init
-    
-    out
-  end
-  
-  def save_entity(entity)
-    merge_new(entity) unless entity.date.nil?
-    persist
-  end
 
   private
-
   def initialize
     super(['Late', 'Out'], 'Statistics.sqlite')
   end
