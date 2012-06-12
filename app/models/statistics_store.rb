@@ -90,12 +90,6 @@ class StatisticsStore < NSObject
 
     store_url = NSURL.fileURLWithPath(File.join(NSHomeDirectory(), 'Documents', 'Statistics.sqlite'))
 
-    error_ptr = Pointer.new(:object)
-    metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(nil, URL:store_url, error:error_ptr)
-    if !metadata.nil? && !model.isConfiguration(nil, compatibleWithStoreMetadata:metadata)
-      migrate_to(model, store_url)
-    end
-
     store = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
     error_ptr = Pointer.new(:object)
     unless store.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:store_url, options:nil, error:error_ptr)
@@ -138,10 +132,5 @@ class StatisticsStore < NSObject
       raise "Error when fetching data: #{error_ptr[0].description}"
     end
     data
-  end
-
-
-  def migrate_to(dest_model, url)
-    puts "STATISTICS_STORE MIGRATE_TO"
   end
 end

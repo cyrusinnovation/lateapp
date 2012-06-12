@@ -4,4 +4,11 @@ class StoreHelper
     m.entities = m.entities.select{|e| names_arr.include?(e.name)}
     m
   end
+  
+  def self.std_lightweight_migration_options
+    {
+      NSMigratePersistentStoresAutomaticallyOption => 1,
+      NSInferMappingModelAutomaticallyOption => 1
+    }
+  end
 end
