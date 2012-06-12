@@ -12,8 +12,8 @@ class AppDelegate
   end
   
 
-  def settings_controller
-    @settings_controller ||= SettingsController.alloc.init
+  def emails_controller
+    @emails_controller ||= EmailsController.alloc.init
   end
  
 end

@@ -1,4 +1,4 @@
-class SettingsController < UITableViewController
+class EmailsController < UITableViewController
   def loadView
     self.tableView = UITableView.alloc.initWithFrame([[0,0],[320,460-44]], style: UITableViewStyleGrouped)
   end

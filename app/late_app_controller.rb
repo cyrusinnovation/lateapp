@@ -63,8 +63,8 @@ class LateAppController < UITableViewController
       navigationController.pushViewController(StatisticsController.alloc.init, animated:true)
   
     elsif @actions[indexPath] == "Settings" 
-      settings_controller = UIApplication.sharedApplication.delegate.settings_controller
-      navigationController.pushViewController(settings_controller, animated:true)
+      emails_controller = UIApplication.sharedApplication.delegate.emails_controller
+      navigationController.pushViewController(emails_controller, animated:true)
 
     end
 
