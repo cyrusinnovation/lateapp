@@ -13,19 +13,22 @@ class BasicStore < NSObject
 
     context = NSManagedObjectContext.alloc.init
     context.persistentStoreCoordinator = store
+    @cache = {}
     @context = context
   end
 
-  def find_all(entity_name)
-    request = NSFetchRequest.alloc.init
-    request.entity = NSEntityDescription.entityForName(entity_name, inManagedObjectContext:@context)
+  def all(entity_name)
+    @cache[entity_name] ||= begin
+      request = NSFetchRequest.alloc.init
+      request.entity = NSEntityDescription.entityForName(entity_name, inManagedObjectContext:@context)
 
-    error_ptr = Pointer.new(:object)
-    data = @context.executeFetchRequest(request, error:error_ptr)
-    if data == nil
-      raise "Error when fetching data: #{error_ptr[0].description}"
+      error_ptr = Pointer.new(:object)
+      data = @context.executeFetchRequest(request, error:error_ptr)
+      if data == nil
+        raise "Error when fetching data: #{error_ptr[0].description}"
+      end
+      data
     end
-    data
   end
   
   def create_managed_object_for_key(key)

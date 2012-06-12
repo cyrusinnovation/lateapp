@@ -4,9 +4,7 @@ class EmailsStore < BasicStore
   end
 
   def emails
-    @emails ||= begin
-      find_all('Email')
-    end
+    all('Email')
   end
   
   def create_email
@@ -38,6 +36,6 @@ class EmailsStore < BasicStore
     unless @context.save(error_ptr)
       raise "Error when saving the model: #{error_ptr[0].description}"
     end
-    @emails = nil
+    @cache.clear
   end
 end

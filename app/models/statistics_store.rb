@@ -4,15 +4,11 @@ class StatisticsStore < BasicStore
   end
 
   def lates
-    @lates ||= begin
-      find_all('Late')
-    end
+    all('Late')
   end
   
   def outs
-    @outs ||= begin
-      find_all('Out')
-    end
+    all('Out')
   end
 
   
@@ -41,7 +37,7 @@ class StatisticsStore < BasicStore
   end  
 
   def create_out
-    out = create_managed_object_for_key('Late')
+    out = create_managed_object_for_key('Out')
     out.date = NSDate.alloc.init
     
     out
@@ -61,8 +57,7 @@ class StatisticsStore < BasicStore
     unless @context.save(error_ptr)
       raise "Error when saving the model: #{error_ptr[0].description}"
     end
-    @outs = nil
-    @lates = nil
+    @cache.clear
   end
   
 
