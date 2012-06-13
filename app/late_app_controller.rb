@@ -80,17 +80,11 @@ class LateAppController < UITableViewController
     tv.deselectRowAtIndexPath(indexPath, animated:true)
   end
   
-  def willPresentActionSheet(as)
-    as.subviews[0].setTextColor(UIColor.fromHexCode('44', '44', '44'))
-    actionSheetBackgroundView = UIImageView.alloc.initWithFrame([[0, 0], as.bounds.size])
-    actionSheetBackgroundView.setBackgroundColor(UIColor.fromHexCode('ab','df','f3'))
-    as.insertSubview(actionSheetBackgroundView, atIndex:0)
-  end
-  
   def actionSheet(as, clickedButtonAtIndex:buttonIndex)
     unless buttonIndex == as.cancelButtonIndex
       
       if as.title == GROUP_TITLE
+        @current_group_name = as.buttonTitleAtIndex(buttonIndex)
         if @current_action == LATE_ACTION
           UIActionSheet.alloc.initWithTitle(LATE_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"5 minutes","15 minutes","30 minutes","1 hour",nil).showInView(self.view)
         elsif @current_action == OUT_ACTION
@@ -100,13 +94,21 @@ class LateAppController < UITableViewController
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         time = selected_title.match(/(\d+)/)[0].to_i
         time = 60 if selected_title == "1 hour"
-        EmailSender.alloc.initWithLate(selected_title, time).showEmail(self)
+        EmailSender.alloc.initWithLate(selected_title, time, @current_group_name).showEmail(self)
       elsif as.title == OUT_TITLE
         selected_title = as.buttonTitleAtIndex(buttonIndex)
-        EmailSender.alloc.initWithOut(selected_title).showEmail(self)
+        EmailSender.alloc.initWithOut(selected_title, @current_group_name).showEmail(self)
       end  
     end
   end
+
+  def willPresentActionSheet(as)
+    as.subviews[0].setTextColor(UIColor.fromHexCode('44', '44', '44'))
+    actionSheetBackgroundView = UIImageView.alloc.initWithFrame([[0, 0], as.bounds.size])
+    actionSheetBackgroundView.setBackgroundColor(UIColor.fromHexCode('ab','df','f3'))
+    as.insertSubview(actionSheetBackgroundView, atIndex:0)
+  end
+  
 
   def flash(msg)
     UIAlertView.alloc.initWithTitle("", message:msg, delegate:self, cancelButtonTitle:"OK", otherButtonTitles:nil).show

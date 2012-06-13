@@ -1,18 +1,20 @@
 class EmailSender
   
-  def initWithLate(title, time)
+  def initWithLate(title, time, group)
     @subject = "#{titlecase(title)} Late Today"
     @message = createLateEmailMessage(title) + "<br><br>" + trademark
     @statistic = StatisticsStore.shared.create_late(time)
     @token = :late
+    @group = group
     self
   end
   
-  def initWithOut(emailCheckingStatus)
+  def initWithOut(emailCheckingStatus, group)
     @subject = "Out Sick Today"
     @message = createOutEmailMessage(emailCheckingStatus) + "<br><br>" + trademark
     @statistic = StatisticsStore.shared.create_out()
     @token = :out
+    @group = group
     self
   end
   
@@ -24,7 +26,7 @@ class EmailSender
     
     # Set Email properties
     recipients = []
-    EmailsStore.shared.emails.each do |email|
+    EmailsStore.shared.emails_in_group(@group).each do |email|
       recipients << email.email
     end
     composer.setToRecipients(recipients)
