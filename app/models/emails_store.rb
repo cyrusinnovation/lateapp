@@ -16,7 +16,7 @@ class EmailsStore < BasicStore
   end
 
   def active_groups
-    groups.select {|g|
+    @cache['active_groups'] ||= groups.select {|g|
       !emails_in_group(g.name).empty?
     }
   end
