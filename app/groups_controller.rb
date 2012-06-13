@@ -71,8 +71,14 @@ class GroupsController < UITableViewController
   
   def tableView(tv, commitEditingStyle:editingStyle, forRowAtIndexPath:indexPath )
     if (editingStyle == UITableViewCellEditingStyleDelete)
-#      EmailsStore.shared.remove_group(EmailsStore.shared.groups[indexPath.row])
-#      tv.deleteRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimationFade)
+      group_name = tv.cellForRowAtIndexPath(indexPath).textLabel.text
+      @delete_delegate = AlertViewDelegate.new {
+        EmailsStore.shared.remove_group(EmailsStore.shared.groups[indexPath.row])
+        tv.deleteRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimationFade)
+      }
+      alert = UIAlertView.alloc.initWithTitle("", message:"Are you sure you want to delete the group '#{group_name}' and all of its email addresses?", 
+                delegate:@delete_delegate, cancelButtonTitle:"Cancel", otherButtonTitles:"Ok", nil)
+      alert.show
     end
   end
   

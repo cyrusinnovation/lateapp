@@ -44,6 +44,11 @@ class EmailsStore < BasicStore
   end
   
   def remove_group(group)
+    emails_in_group(group.name).each {|e|
+      @context.deleteObject(e)
+    }
+    @context.deleteObject(group)
+    persist
   end
   
   private
