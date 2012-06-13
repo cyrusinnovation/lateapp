@@ -1,14 +1,21 @@
 class LateAppController < UITableViewController
+  LATE_ACTION = "Running Late"
+  OUT_ACTION = "Out Sick"
+  LATE_TITLE = "How Late?"
+  OUT_TITLE = "Will You Check Email?"
+  GROUP_TITLE = "Notify Whom?"
+  STATS_ACTION = "Statistics"
+  SETTINGS_ACTION = "Settings"
   
   def loadView
     self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,440]], style: UITableViewStyleGrouped)
   end  
   
   def viewDidLoad
-    @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => "Running Late",
-                NSIndexPath.indexPathForRow(1, inSection:0) => "Out Sick",
-                NSIndexPath.indexPathForRow(0, inSection:1) => "Statistics",
-                NSIndexPath.indexPathForRow(1, inSection:1) => "Settings"
+    @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => LATE_ACTION,
+                NSIndexPath.indexPathForRow(1, inSection:0) => OUT_ACTION,
+                NSIndexPath.indexPathForRow(0, inSection:1) => STATS_ACTION,
+                NSIndexPath.indexPathForRow(1, inSection:1) => SETTINGS_ACTION
                 }
     tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
     tableView.sectionHeaderHeight = 40
@@ -51,18 +58,20 @@ class LateAppController < UITableViewController
   
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
     
-    if @actions[indexPath] == "Running Late"
-      late_action_sheet = UIActionSheet.alloc.initWithTitle("How late?", delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"5 minutes","15 minutes","30 minutes","1 hour",nil)
-      late_action_sheet.showInView(self.view)
+    if @actions[indexPath] == LATE_ACTION || @actions[indexPath] == OUT_ACTION
+      @current_action = @actions[indexPath]
+      group_action_sheet = UIActionSheet.alloc.initWithTitle(GROUP_TITLE, delegate:self, cancelButtonTitle:nil, destructiveButtonTitle:nil, otherButtonTitles:nil)
+      EmailsStore.shared.active_groups.each {|g|
+        group_action_sheet.addButtonWithTitle(g.name)
+      }
+      group_action_sheet.addButtonWithTitle("Cancel")
+      group_action_sheet.cancelButtonIndex = EmailsStore.shared.active_groups.length
+      group_action_sheet.showInView(self.view)
       
-    elsif @actions[indexPath] == "Out Sick" 
-      out_action_sheet = UIActionSheet.alloc.initWithTitle("Will you check Email?", delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil)
-      out_action_sheet.showInView(self.view)
-      
-    elsif @actions[indexPath] == "Statistics" 
+    elsif @actions[indexPath] == STATS_ACTION
       navigationController.pushViewController(StatisticsController.alloc.init, animated:true)
   
-    elsif @actions[indexPath] == "Settings" 
+    elsif @actions[indexPath] == SETTINGS_ACTION
       groups_controller = UIApplication.sharedApplication.delegate.groups_controller
       navigationController.pushViewController(groups_controller, animated:true)
 
@@ -81,12 +90,18 @@ class LateAppController < UITableViewController
   def actionSheet(as, clickedButtonAtIndex:buttonIndex)
     unless buttonIndex == as.cancelButtonIndex
       
-      if as.title == "How late?"
+      if as.title == GROUP_TITLE
+        if @current_action == LATE_ACTION
+          UIActionSheet.alloc.initWithTitle(LATE_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"5 minutes","15 minutes","30 minutes","1 hour",nil).showInView(self.view)
+        elsif @current_action == OUT_ACTION
+          UIActionSheet.alloc.initWithTitle(OUT_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil).showInView(self.view)
+        end
+      elsif as.title == LATE_TITLE
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         time = selected_title.match(/(\d+)/)[0].to_i
         time = 60 if selected_title == "1 hour"
         EmailSender.alloc.initWithLate(selected_title, time).showEmail(self)
-      else
+      elsif as.title == OUT_TITLE
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         EmailSender.alloc.initWithOut(selected_title).showEmail(self)
       end  

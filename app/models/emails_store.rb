@@ -14,6 +14,12 @@ class EmailsStore < BasicStore
   def groups
     all('Group')
   end
+
+  def active_groups
+    groups.select {|g|
+      !emails_in_group(g.name).empty?
+    }
+  end
   
   def create_email
     email = create_managed_object_for_key('Email')
