@@ -35,13 +35,20 @@ class GroupsController < UITableViewController
   end
   
   def onClickAddItem(sender)
-    puts "onClickAddItem"
+    alert = UIAlertView.alloc.initWithTitle("", message:"Enter name of group", delegate:self, cancelButtonTitle:"OK", otherButtonTitles:nil)
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput
+    alert.show
   end
   
-  def showEmails(sender)
-
-  end  
-  
+  def alertView(av, clickedButtonAtIndex:idx)
+    t = av.textFieldAtIndex(0).text.strip
+    if !(t == "")
+      g = EmailsStore.shared.create_group
+      g.name = t
+      EmailsStore.shared.save_group(g)
+      tableView.reloadData
+    end
+  end
   
   def standardCellHeight
     44
@@ -52,11 +59,7 @@ class GroupsController < UITableViewController
   end
   
   def tableView(tv, editingStyleForRowAtIndexPath:indexPath)
-    if indexPath.row < EmailsStore.shared.groups.length and !@editing
-      UITableViewCellEditingStyleDelete
-    else
-      UITableViewCellEditingStyleNone
-    end
+    UITableViewCellEditingStyleDelete
   end
 
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
