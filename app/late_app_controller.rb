@@ -3,7 +3,7 @@ class LateAppController < UITableViewController
   OUT_ACTION = "Out Sick"
   LATE_TITLE = "How Late?"
   OUT_TITLE = "Will You Check Email?"
-  GROUP_TITLE = "Notify Whom?"
+  GROUP_TITLE = "Notify Which Group?"
   STATS_ACTION = "Statistics"
   SETTINGS_ACTION = "Settings"
   
