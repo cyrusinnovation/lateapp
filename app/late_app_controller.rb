@@ -54,19 +54,30 @@ class LateAppController < UITableViewController
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
     cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
+    if EmailsStore.shared.active_groups.length == 0 && indexPath.section == 0
+      cell.backgroundColor = UIColor.fromHexCode('66', '66', '66')
+      cell.accessoryType = UITableViewCellAccessoryNone
+      cell.userInteractionEnabled = false
+    end
   end
   
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
     
     if @actions[indexPath] == LATE_ACTION || @actions[indexPath] == OUT_ACTION
       @current_action = @actions[indexPath]
-      group_action_sheet = UIActionSheet.alloc.initWithTitle(GROUP_TITLE, delegate:self, cancelButtonTitle:nil, destructiveButtonTitle:nil, otherButtonTitles:nil)
-      EmailsStore.shared.active_groups.each {|g|
-        group_action_sheet.addButtonWithTitle(g.name)
-      }
-      group_action_sheet.addButtonWithTitle("Cancel")
-      group_action_sheet.cancelButtonIndex = EmailsStore.shared.active_groups.length
-      group_action_sheet.showInView(self.view)
+      groups = EmailsStore.shared.active_groups
+      if groups.length == 1
+        @current_group_name = groups[0].name
+        present_email_action_sheet
+      else
+        group_action_sheet = UIActionSheet.alloc.initWithTitle(GROUP_TITLE, delegate:self, cancelButtonTitle:nil, destructiveButtonTitle:nil, otherButtonTitles:nil)
+        groups.each {|g|
+          group_action_sheet.addButtonWithTitle(g.name)
+        }
+        group_action_sheet.addButtonWithTitle("Cancel")
+        group_action_sheet.cancelButtonIndex = groups.length
+        group_action_sheet.showInView(self.view)
+      end
       
     elsif @actions[indexPath] == STATS_ACTION
       navigationController.pushViewController(StatisticsController.alloc.init, animated:true)
@@ -85,11 +96,7 @@ class LateAppController < UITableViewController
       
       if as.title == GROUP_TITLE
         @current_group_name = as.buttonTitleAtIndex(buttonIndex)
-        if @current_action == LATE_ACTION
-          UIActionSheet.alloc.initWithTitle(LATE_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"5 minutes","15 minutes","30 minutes","1 hour",nil).showInView(self.view)
-        elsif @current_action == OUT_ACTION
-          UIActionSheet.alloc.initWithTitle(OUT_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil).showInView(self.view)
-        end
+        present_email_action_sheet
       elsif as.title == LATE_TITLE
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         time = selected_title.match(/(\d+)/)[0].to_i
@@ -99,6 +106,14 @@ class LateAppController < UITableViewController
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         EmailSender.alloc.initWithOut(selected_title, @current_group_name).showEmail(self)
       end  
+    end
+  end
+
+  def present_email_action_sheet
+    if @current_action == LATE_ACTION
+      UIActionSheet.alloc.initWithTitle(LATE_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"5 minutes","15 minutes","30 minutes","1 hour",nil).showInView(self.view)
+    elsif @current_action == OUT_ACTION
+      UIActionSheet.alloc.initWithTitle(OUT_TITLE, delegate:self, cancelButtonTitle:"Cancel", destructiveButtonTitle:nil, otherButtonTitles:"Will do","Maybe later","Probably not",nil).showInView(self.view)
     end
   end
 
@@ -112,5 +127,9 @@ class LateAppController < UITableViewController
 
   def flash(msg)
     UIAlertView.alloc.initWithTitle("", message:msg, delegate:self, cancelButtonTitle:"OK", otherButtonTitles:nil).show
+  end
+
+  def reload
+    tableView.reloadData
   end
 end

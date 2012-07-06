@@ -49,6 +49,7 @@ class BasicStore < NSObject
       raise "Error when saving the model: #{error_ptr[0].description}"
     end
     @cache.clear
+    UIApplication.sharedApplication.delegate.data_changed
   end
 
   def remove(entity)
