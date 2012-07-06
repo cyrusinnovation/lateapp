@@ -32,11 +32,7 @@ class LateAppController < UITableViewController
   end  
   
   def tableView(tv, numberOfRowsInSection:section)
-    if section == 0
-      2
-    else
-      2
-    end
+    2
   end
 
   def numberOfSectionsInTableView(tv)
@@ -54,11 +50,6 @@ class LateAppController < UITableViewController
   
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
     cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
-    if EmailsStore.shared.active_groups.length == 0 && indexPath.section == 0
-      cell.backgroundColor = UIColor.fromHexCode('66', '66', '66')
-      cell.accessoryType = UITableViewCellAccessoryNone
-      cell.userInteractionEnabled = false
-    end
   end
   
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
@@ -66,7 +57,10 @@ class LateAppController < UITableViewController
     if @actions[indexPath] == LATE_ACTION || @actions[indexPath] == OUT_ACTION
       @current_action = @actions[indexPath]
       groups = EmailsStore.shared.active_groups
-      if groups.length == 1
+      if groups.length == 0
+        @current_group_name = nil
+        present_email_action_sheet
+      elsif groups.length == 1
         @current_group_name = groups[0].name
         present_email_action_sheet
       else

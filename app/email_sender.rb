@@ -26,8 +26,10 @@ class EmailSender
     
     # Set Email properties
     recipients = []
-    EmailsStore.shared.emails_in_group(@group).each do |email|
-      recipients << email.email
+    if !@group.nil?
+      EmailsStore.shared.emails_in_group(@group).each do |email|
+        recipients << email.email
+      end
     end
     composer.setToRecipients(recipients)
     composer.setSubject(@subject)
