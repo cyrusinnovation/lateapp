@@ -85,10 +85,12 @@ class LateAppController < UITableViewController
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         time = selected_title.match(/(\d+)/)[0].to_i
         time = 60 if selected_title == "1 hour"
-        EmailSender.alloc.initWithLate(selected_title, time).showEmail(self)
+        @emailSender = EmailSender.alloc.initWithLate(selected_title, time)
+		@emailSender.showEmail(self)
       else
         selected_title = as.buttonTitleAtIndex(buttonIndex)
-        EmailSender.alloc.initWithOut(selected_title).showEmail(self)
+        @emailSender = EmailSender.alloc.initWithOut(selected_title)
+		@emailSender.showEmail(self)
       end  
     end
   end
