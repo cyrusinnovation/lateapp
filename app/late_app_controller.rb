@@ -6,11 +6,11 @@ class LateAppController < UITableViewController
   GROUP_TITLE = "Notify Which Group?"
   STATS_ACTION = "Statistics"
   SETTINGS_ACTION = "Settings"
-  
+
   def loadView
     self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,440]], style: UITableViewStyleGrouped)
-  end  
-  
+  end
+
   def viewDidLoad
     @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => LATE_ACTION,
                 NSIndexPath.indexPathForRow(1, inSection:0) => OUT_ACTION,
@@ -22,15 +22,15 @@ class LateAppController < UITableViewController
     tableView.rowHeight = 64
     navigationController.navigationBar.setBackgroundImage(UIImage.imageNamed("banner.png"), forBarMetrics:UIBarMetricsDefault)
   end
-  
+
   def tableView(tv, heightForFooterInSection:section)
     if section == 0
       65
     else
       0
     end
-  end  
-  
+  end
+
   def tableView(tv, numberOfRowsInSection:section)
     2
   end
@@ -47,13 +47,13 @@ class LateAppController < UITableViewController
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
     cell
   end
-  
+
   def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
     cell.textLabel.textColor = UIColor.fromHexCode('44','44','44') # gray
   end
-  
+
   def tableView(tv, didSelectRowAtIndexPath:indexPath)
-    
+
     if @actions[indexPath] == LATE_ACTION || @actions[indexPath] == OUT_ACTION
       @current_action = @actions[indexPath]
       groups = EmailsStore.shared.active_groups
@@ -72,10 +72,10 @@ class LateAppController < UITableViewController
         group_action_sheet.cancelButtonIndex = groups.length
         group_action_sheet.showInView(self.view)
       end
-      
+
     elsif @actions[indexPath] == STATS_ACTION
       navigationController.pushViewController(StatisticsController.alloc.init, animated:true)
-  
+
     elsif @actions[indexPath] == SETTINGS_ACTION
       groups_controller = UIApplication.sharedApplication.delegate.groups_controller
       navigationController.pushViewController(groups_controller, animated:true)
@@ -84,10 +84,10 @@ class LateAppController < UITableViewController
 
     tv.deselectRowAtIndexPath(indexPath, animated:true)
   end
-  
+
   def actionSheet(as, clickedButtonAtIndex:buttonIndex)
     unless buttonIndex == as.cancelButtonIndex
-      
+
       if as.title == GROUP_TITLE
         @current_group_name = as.buttonTitleAtIndex(buttonIndex)
         present_email_action_sheet
@@ -101,7 +101,7 @@ class LateAppController < UITableViewController
         selected_title = as.buttonTitleAtIndex(buttonIndex)
         @emailSender = EmailSender.alloc.initWithOut(selected_title, @current_group_name)
         @emailSender.showEmail(self)
-      end  
+      end
     end
   end
 
@@ -114,12 +114,9 @@ class LateAppController < UITableViewController
   end
 
   def willPresentActionSheet(as)
-    as.subviews[0].setTextColor(UIColor.fromHexCode('44', '44', '44'))
-    actionSheetBackgroundView = UIImageView.alloc.initWithFrame([[0, 0], as.bounds.size])
-    actionSheetBackgroundView.setBackgroundColor(UIColor.fromHexCode('ab','df','f3'))
-    as.insertSubview(actionSheetBackgroundView, atIndex:0)
+    as.subviews[1].setTextColor(UIColor.fromHexCode('44', '44', '44'))
   end
-  
+
 
   def flash(msg)
     UIAlertView.alloc.initWithTitle("", message:msg, delegate:self, cancelButtonTitle:"OK", otherButtonTitles:nil).show
