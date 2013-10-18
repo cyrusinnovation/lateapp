@@ -8,7 +8,8 @@ class LateAppController < UITableViewController
   SETTINGS_ACTION = "Settings"
 
   def loadView
-    self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,440]], style: UITableViewStyleGrouped)
+    table_height = UIScreen.mainScreen.bounds.size.height - 44
+    self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,table_height]], style: UITableViewStyleGrouped)
   end
 
   def viewDidLoad
