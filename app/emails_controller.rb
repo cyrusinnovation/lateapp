@@ -28,10 +28,6 @@ class EmailsController < UITableViewController
     "#{current_group_name} Emails"
   end
 
-  def tableView(tv, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-    cell.subviews[2].textColor = UIColor.fromHexCode('44','44','44') # gray
-  end
-
   def tableView(tv, cellForRowAtIndexPath:indexPath)
     cell = UITableViewCell.alloc.initWithStyle(
                   UITableViewCellStyleSubtitle,
