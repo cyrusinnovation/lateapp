@@ -13,6 +13,7 @@ Motion::Project::App.setup do |app|
                "Icon-Small-50.png","Icon-Small-50@2x.png"]
   app.prerendered_icon = true
   app.frameworks += ['CoreData', 'MessageUI']
+  app.version = "1.0.1"
 
   app.development do
     app.codesign_certificate = 'iPhone Distribution: Cyrus Innovation (Z7HUA7E8W9)'
