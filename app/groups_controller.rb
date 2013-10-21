@@ -1,6 +1,6 @@
 class GroupsController < UITableViewController
   def loadView
-     table_height = UIScreen.mainScreen.bounds.size.height - 44
+    table_height = UIScreen.mainScreen.bounds.size.height - 44
     self.tableView = UITableView.alloc.initWithFrame([[0,0],[320,table_height]], style: UITableViewStyleGrouped)
   end
 

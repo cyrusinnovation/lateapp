@@ -1,6 +1,8 @@
 $:.unshift("/Library/RubyMotion/lib")
 require 'bundler'
 require 'motion/project/template/ios'
+Bundler.require
+require 'sugarcube-repl'
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.

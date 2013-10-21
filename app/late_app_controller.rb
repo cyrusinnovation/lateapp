@@ -7,10 +7,14 @@ class LateAppController < UITableViewController
   STATS_ACTION = "Statistics"
   SETTINGS_ACTION = "Settings"
 
-  def loadView
-    table_height = UIScreen.mainScreen.bounds.size.height - 44
-    self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,table_height]], style: UITableViewStyleGrouped)
+  def init
+    initWithStyle(UITableViewStylePlain)
   end
+
+  # def loadView
+  #   table_height = UIScreen.mainScreen.bounds.size.height - 44
+  #   self.tableView = UITableView.alloc.initWithFrame([[0,44],[320,table_height]], style: UITableViewStyleGrouped)
+  # end
 
   def viewDidLoad
     @actions = {NSIndexPath.indexPathForRow(0, inSection:0) => LATE_ACTION,
@@ -18,9 +22,11 @@ class LateAppController < UITableViewController
                 NSIndexPath.indexPathForRow(0, inSection:1) => STATS_ACTION,
                 NSIndexPath.indexPathForRow(1, inSection:1) => SETTINGS_ACTION
                 }
-    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
+    tableView.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd') # light green
+    self.view.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd')
     tableView.sectionHeaderHeight = 40
     tableView.rowHeight = 64
+    tableView.tableFooterView = UIView.alloc.initWithFrame(CGRectZero)
     navigationController.navigationBar.setBackgroundImage(UIImage.imageNamed("banner.png"), forBarMetrics:UIBarMetricsDefault)
   end
 
@@ -29,6 +35,14 @@ class LateAppController < UITableViewController
       65
     else
       0
+    end
+  end
+
+  def tableView(tableView, viewForFooterInSection:section)
+    return nill unless section == 0
+
+    UIView.alloc.initWithFrame(CGRectMake(0,0,320,65)).tap do |v|
+      v.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd')
     end
   end
 
