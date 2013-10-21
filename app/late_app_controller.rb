@@ -22,8 +22,8 @@ class LateAppController < UITableViewController
                 NSIndexPath.indexPathForRow(0, inSection:1) => STATS_ACTION,
                 NSIndexPath.indexPathForRow(1, inSection:1) => SETTINGS_ACTION
                 }
-    tableView.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd') # light green
-    self.view.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd')
+    tableView.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f') # light green
+    self.view.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f')
     tableView.sectionHeaderHeight = 40
     tableView.rowHeight = 64
     tableView.tableFooterView = UIView.alloc.initWithFrame(CGRectZero)
@@ -42,7 +42,7 @@ class LateAppController < UITableViewController
     return nil unless section == 0
 
     UIView.alloc.initWithFrame(CGRectMake(0,0,320,65)).tap do |v|
-      v.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd')
+      v.backgroundColor = UIColor.fromHexCode('5f', 'ff', '8f')
     end
   end
 
