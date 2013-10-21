@@ -8,7 +8,7 @@ class LateAppController < UITableViewController
   SETTINGS_ACTION = "Settings"
 
   def init
-    initWithStyle(UITableViewStylePlain)
+    initWithStyle(UITableViewStyleGrouped)
   end
 
   # def loadView
@@ -39,7 +39,7 @@ class LateAppController < UITableViewController
   end
 
   def tableView(tableView, viewForFooterInSection:section)
-    return nill unless section == 0
+    return nil unless section == 0
 
     UIView.alloc.initWithFrame(CGRectMake(0,0,320,65)).tap do |v|
       v.backgroundColor = UIColor.fromHexCode('bf', 'ff', 'dd')

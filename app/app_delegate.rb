@@ -1,6 +1,5 @@
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    puts UIScreen.mainScreen.bounds.size.height
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     @window.rootViewController = nav_controller
     # @window.rootViewController.wantsFullScreenLayout = true
