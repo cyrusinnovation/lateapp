@@ -1,5 +1,5 @@
 class EmailSender
-  
+
   def initWithLate(title, time, group)
     @subject = "#{titlecase(title)} Late Today"
     @message = createLateEmailMessage(title) + "<br><br>" + trademark
@@ -8,7 +8,7 @@ class EmailSender
     @group = group
     self
   end
-  
+
   def initWithOut(emailCheckingStatus, group)
     @subject = "Out Sick Today"
     @message = createOutEmailMessage(emailCheckingStatus) + "<br><br>" + trademark
@@ -17,13 +17,13 @@ class EmailSender
     @group = group
     self
   end
-  
+
   def showEmail(controller)
     @controller = controller
     # Set up email controller
     composer = MFMailComposeViewController.alloc.init
     composer.mailComposeDelegate = self
-    
+
     # Set Email properties
     recipients = []
     if !@group.nil?
@@ -34,9 +34,7 @@ class EmailSender
     composer.setToRecipients(recipients)
     composer.setSubject(@subject)
     composer.setMessageBody(@message, isHTML:true)
-    
-    # Display
-    composer.navigationBar.barStyle = UIBarStyleBlack
+
     @controller.presentModalViewController(composer, animated:true)
   end
 
@@ -57,21 +55,21 @@ class EmailSender
         MFMailComposeResultSent => "Message sent! #{humor[@token]}",
         MFMailComposeResultFailed => "Something went wrong. Maybe call someone instead."
       }
-      
+
       @controller.flash(flash_message[result]) unless flash_message[result].nil?
     end)
   end
-  
-  private 
-  
+
+  private
+
   def createLateEmailMessage(time)
     "I am running about #{time} late today. Sorry!"
   end
-  
+
   def trademark
-    "<em>Quickly composed by <a href=\"http://itunes.apple.com/us/app/im-late!/id528671018?ls=1&mt=8\">I'm Late!</a></em>" 
+    "<em>Quickly composed by <a href=\"http://itunes.apple.com/us/app/im-late!/id528671018?ls=1&mt=8\">I'm Late!</a></em>"
   end
-  
+
   def createOutEmailMessage(emailCheckingStatus)
     if emailCheckingStatus == "Will do"
       "I am out sick. I will check my email periodically."
@@ -81,7 +79,7 @@ class EmailSender
       "I am out sick. I will probably not be able to check my email anytime soon, but I'll update you when I get a chance."
     end
   end
-  
+
   def titlecase(str)
      non_capitalized = %w{of etc and by the for on is at to but nor or a via}
      str.gsub(/\b[a-z]+/){ |w| non_capitalized.include?(w) ? w : w.capitalize  }.sub(/^[a-z]/){|l| l.upcase }.sub(/\b[a-z][^\s]*?$/){|l| l.capitalize }
