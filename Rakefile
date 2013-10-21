@@ -14,9 +14,17 @@ Motion::Project::App.setup do |app|
   app.prerendered_icon = true
   app.frameworks += ['CoreData', 'MessageUI']
 
-  app.release do
-    app.codesign_certificate = 'iPhone Distribution: Cyrus Innovation'
+  app.development do
+    app.codesign_certificate = 'iPhone Distribution: Cyrus Innovation (Z7HUA7E8W9)'
     app.identifier = 'com.cyrusinnovation.imlate'
-    app.provisioning_profile = '/Users/cyrus/Library/MobileDevice/Provisioning Profiles/D22F0DDF-2DFA-4C7C-B8E2-82494EB1C010.mobileprovision'
+    app.provisioning_profile = './provisioning/Im_Late_Dev_profile.mobileprovision'
+    app.entitlements['get-task-allow'] = false
+  end
+
+  app.release do
+    app.codesign_certificate = 'iPhone Distribution: Cyrus Innovation (Z7HUA7E8W9)'
+    app.identifier = 'com.cyrusinnovation.imlate'
+    app.provisioning_profile = './provisioning/I_am_running_late_distribution_profile.mobileprovision'
+    app.entitlements['get-task-allow'] = false
   end
 end
